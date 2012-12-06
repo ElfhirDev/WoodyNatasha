@@ -18,6 +18,6 @@ MatrixXd Tensor3d::getM() {return M;}
 MatrixXd Tensor3d::getN() {return N;}
 
 void Tensor3d::setL(MatrixXd A) { L = A;}
-void Tensor3d::setM(MatrixXd B) { M = B;}
-void Tensor3d::setN(MatrixXd C) { N = C;}
+void Tensor3d::setL(MatrixXd B) { M = B;}
+void Tensor3d::setL(MatrixXd C) { N = C;}
  

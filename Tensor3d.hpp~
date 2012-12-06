@@ -23,9 +23,6 @@ class Tensor3d {
 		MatrixXd getL();
 		MatrixXd getM();
 		MatrixXd getN();
-		void setL(MatrixXd A);
-		void setM(MatrixXd B);
-		void setN(MatrixXd C);
 				
 		/* Access at element of Tensor, T(i,j,k)
  		 * return double

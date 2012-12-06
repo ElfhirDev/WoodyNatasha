@@ -1,11 +1,15 @@
 #include <iostream>
+#include <typeinfo>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
 #include "MathIO.hpp"
 #include "draw.hpp"
+#include "ttt.hpp"
+#include "Tensor3d.hpp"
 
 using namespace std;
+
 
 int main(int argc, char *argv[])
 {
@@ -53,18 +57,14 @@ int main(int argc, char *argv[])
   Eigen::MatrixXd list3;
   
 	// load 
-  const char* nameList1 = "input/list-user/list1.list";
-  const char* nameList2 = "input/list-user/list2.list";
-  const char* nameList3 = "input/list-user/list3.list";
+  const char* nameList1 = "input/list1.list";
+  const char* nameList2 = "input/list2.list";
+  const char* nameList3 = "input/list3.list";
   
   // see MathIO.hpp 
   kn::loadMatrix(list1, nameList1);
   kn::loadMatrix(list2, nameList2);
   kn::loadMatrix(list3, nameList3);
-  
-  cout << list1 << endl << endl;
-  cout << list2 << endl << endl;
-  cout << list3 << endl << endl;
 
   // save a list
   kn::saveMatrix(list1,"/tmp/myList.mat");
@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 	
 	// initial drawing
   // draw points on image1
+  
   for(int i=0; i<list1.rows(); ++i) {
     fill_circle(screen, list1(i,0), list1(i,1), 3, red);
 	}
@@ -97,6 +98,12 @@ int main(int argc, char *argv[])
 	double yClick;
 	SDL_Event event;
 	
+	// ---------- Test zone --------------	
+	Tensor3d Titi(list1, list2, list3);
+	
+	cout << "Titi L :" << endl << Titi.getL() << endl;
+	
+	
 	while (done) {
 		
 		// draw points on image1
@@ -111,6 +118,8 @@ int main(int argc, char *argv[])
 	  for(int i=0; i<list3.rows(); ++i) {
 	    fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
 		}
+		// display everything
+  	SDL_Flip(screen);
 		
 		SDL_WaitEvent(&event);
 		switch(event.type) {
@@ -130,6 +139,8 @@ int main(int argc, char *argv[])
   							
 							if(listWrite == false){
 								listWrite = true;
+								list1.resize(0,3);
+								list2.resize(0,3);
 								cout << "Beginning writting mode" << endl;
 							}
 							else {
@@ -154,12 +165,19 @@ int main(int argc, char *argv[])
 								
 								if(xClick <= 399) {
 									
+									appendMatrix(list1, xClick, yClick);
 									cout << "Point add to list1" << endl;
+									
+									cout << list1 << endl;
 								}
 								
 								else if(xClick >= 400 && xClick <= 799) {
-
+									
+									xClick -= 400;
+									appendMatrix(list2, xClick, yClick);
 									cout << "Point add to list2" << endl;
+									
+									cout << list2 << endl;
 								}
 								else if(xClick >= 800) {
 									cout << "You should click on the 1s and 2nd images," << endl << "else invert images in the folder." << endl;

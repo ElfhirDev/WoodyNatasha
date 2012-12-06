@@ -1,10 +1,12 @@
 #include <iostream>
+#include <typeinfo>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
 #include "MathIO.hpp"
 #include "draw.hpp"
 #include "ttt.hpp"
+#include "Tensor3d.hpp"
 
 using namespace std;
 
@@ -55,9 +57,9 @@ int main(int argc, char *argv[])
   Eigen::MatrixXd list3;
   
 	// load 
-  const char* nameList1 = "input/list-user/list1.list";
-  const char* nameList2 = "input/list-user/list2.list";
-  const char* nameList3 = "input/list-user/list3.list";
+  const char* nameList1 = "input/list1.list";
+  const char* nameList2 = "input/list2.list";
+  const char* nameList3 = "input/list3.list";
   
   // see MathIO.hpp 
   kn::loadMatrix(list1, nameList1);
@@ -95,6 +97,12 @@ int main(int argc, char *argv[])
 	double xClick;
 	double yClick;
 	SDL_Event event;
+	
+	// ---------- Test zone --------------	
+	Tensor3d Titi(list1, list2, list3);
+	
+	
+	
 	
 	while (done) {
 		
