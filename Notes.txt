@@ -1,0 +1,8 @@
+SDL_event with mouse click will get only Uint16 (unsigned int 16bits, so integer for us)
+
+So first, the lists of points given by Vincent Nozick (list1.list, list2.list and list3.list)
+Are given with double.
+
+The Tensor will be calculated with doubles, then will be arounded into integers in aim
+To use the Tensor with user mouse clicks.
+
