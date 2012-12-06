@@ -5,7 +5,7 @@ INCLUDES = -I ~/eigen/
 
 CXXFLAGS += $(INCLUDES)
 
-OBJ      = MathIO.o draw.o ttt.o main.o
+OBJ      = MathIO.o draw.o ttt.o Tensor3.o main.o
 RM       = rm -f
 BIN      = trifocal
 DIRNAME  = $(shell basename $$PWD)
@@ -26,12 +26,17 @@ MathIO.o : MathIO.cpp MathIO.hpp
 	@echo "done..."
 
 draw.o : draw.cpp draw.hpp 
-	@echo "compile MathIO"
+	@echo "compile draw ... poil au dos."
 	$(CXX) $(CXXFLAGS) -c $<  
 	@echo "done..."
 	
 ttt.o	:	ttt.cpp	ttt.hpp 
-	@echo "compile ttt"
+	@echo "compile ttt ... quel nom pourri au passage !"
+	$(CXX) $(CXXFLAGS) -c $<  
+	@echo "done..."
+	
+Tensor3.o	:	Tensor3.cpp	Tensor3.hpp 
+	@echo "compile Tensor3 ... poil au bras ... ahah."
 	$(CXX) $(CXXFLAGS) -c $<  
 	@echo "done..."
 
