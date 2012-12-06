@@ -101,8 +101,7 @@ int main(int argc, char *argv[])
 	// ---------- Test zone --------------	
 	Tensor3d Titi(list1, list2, list3);
 	
-	
-	
+	Titi.printTensor3d();
 	
 	while (done) {
 		

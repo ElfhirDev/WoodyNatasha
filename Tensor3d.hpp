@@ -1,6 +1,7 @@
 #ifndef __TENSOR3D_H__
 #define __TENSOR3D_H__
 
+#include <iostream>
 #include "MathIO.hpp"
 #include "Eigen/Dense" 
 
@@ -19,13 +20,19 @@ class Tensor3d {
 	public:
 		Tensor3d();
 		Tensor3d(MatrixXd A, MatrixXd B, MatrixXd C);
-		void hydrate(MatrixXd &L, MatrixXd &M, MatrixXd &N);
+		
 		MatrixXd getL();
 		MatrixXd getM();
 		MatrixXd getN();
 		void setL(MatrixXd A);
 		void setM(MatrixXd B);
 		void setN(MatrixXd C);
+		
+		int getRows();
+		
+		double getVal(unsigned int i, unsigned int j, unsigned int k);
+		
+		void printTensor3d();
 				
 		/* Access at element of Tensor, T(i,j,k)
  		 * return double
