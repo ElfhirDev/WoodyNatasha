@@ -37,26 +37,12 @@ class Tensor3d {
 		/* Access at element of Tensor, T(i,j,k)
  		 * return double
  		 */
-		double operator()(unsigned int i, unsigned int j, unsigned int k) {
-			int res = 123456789;
-			switch(k) {
-				case 0:
-					res = L(i,j);
-				break;
-				case 1:
-					res = M(i,j);
-				break;
-				case 2:
-					res = N(i,j);
-				break;
-				default: // Only 3 x 3 x 3 tensor, but user will never use this directly.
-					res = -123456789;
-				break	;	
-			}	
-			
-			return res;
-		}
-	
+		double operator()(unsigned int i, unsigned int j, unsigned int k);
+
+		Eigen::MatrixXd buildMatrixA();
+		Eigen::MatrixXi aroundMatrixA(Eigen::MatrixXd &A);
+
+		Eigen::MatrixXi transfert(MatrixXi list1, MatrixXi list2);
 };
 
 
