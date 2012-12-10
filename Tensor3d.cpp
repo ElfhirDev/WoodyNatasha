@@ -6,20 +6,23 @@
  
 #include "Tensor3d.hpp"
 
-Tensor3d::Tensor3d(MatrixXd A, MatrixXd B, MatrixXd C)
+Tensor3d::Tensor3d(MatrixXd L1, MatrixXd L2, MatrixXd L3)
 {
-	this->L = A;
-	this->M = B;
-	this->N = C;
+	this->L = L1;
+	this->M = L2;
+	this->N = L3;
+
+	this->Adouble = buildMatrixA(L1, L2, L3);
+
 }
 
 MatrixXd Tensor3d::getL() {return L;}
 MatrixXd Tensor3d::getM() {return M;}
 MatrixXd Tensor3d::getN() {return N;}
 
-void Tensor3d::setL(MatrixXd A) { L = A;}
-void Tensor3d::setM(MatrixXd B) { M = B;}
-void Tensor3d::setN(MatrixXd C) { N = C;}
+void Tensor3d::setL(MatrixXd L1) { L = L1;}
+void Tensor3d::setM(MatrixXd L2) { M = L2;}
+void Tensor3d::setN(MatrixXd L3) { N = L3;}
 
 /* Hoping that the tensor3d is full (^_^),
  * because L, M and N should have the same size.
@@ -89,7 +92,7 @@ void Tensor3d::printTensor3d() {
 }
 
 // This is sparta !!
-Eigen::MatrixXd Tensor3d::buildMatrixA() {
+Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 	Eigen::MatrixXd A(27,28);
 
 	// Now check the math subject with Natasha;
