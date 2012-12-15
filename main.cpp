@@ -3,6 +3,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include "Eigen/SVD"
+
 #include "MathIO.hpp"
 #include "draw.hpp"
 #include "ttt.hpp"
@@ -88,23 +90,6 @@ int main(int argc, char *argv[])
 
   SDL_SetAlpha(image1, SDL_SRCALPHA, SDL_ALPHA_TRANSPARENT);
 
-	// initial drawing
-  // draw points on image1
-  
-  /*
-  for(int i=0; i<list1.rows(); ++i) {
-    fill_circle(screen, list1(i,0), list1(i,1), 3, red);
-	}
-  // draw points on image2
-  for(int i=0; i<list2.rows(); ++i) {
-    fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, blue);
-	}
-  // draw points on image3
-  for(int i=0; i<list3.rows(); ++i) {
-    fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
-	}
-	
-	*/
 
 
   // display everything
@@ -119,6 +104,20 @@ int main(int argc, char *argv[])
 	// ---------- Test zone --------------	
 	Tensor3d Titi(list1, list2, list3);
 	Titi.printTensor3d();
+
+	// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
+	Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
+	
+	// SVD decomposition of A
+	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+
+	// Creation of Vector 27 elts = 0;
+	VectorXd ZeroZero = MatrixXd::Zero(27,1);
+	
+	// Solving equations with least square
+	//
+	// VectorXd t =  svd.solve(ZeroZero);
+
 
 	cout << "List1 :" << list1 << endl;
 	cout << "List2 :" << list2 << endl;
