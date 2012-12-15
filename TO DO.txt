@@ -8,6 +8,7 @@
     create counter of click after listWrite allowed.
     When listWrite, do not draw the previous points list1, list2, list3.
 
+>>>>>>>>>>><< some problems here
     if > 7 for list_user1 and list_user(also draw this new points),
      then save the lists
     with kn::saveMatrix; 

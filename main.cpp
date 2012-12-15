@@ -55,31 +55,32 @@ int main(int argc, char *argv[])
   Eigen::MatrixXd list1;
   Eigen::MatrixXd list2;
   Eigen::MatrixXd list3;
-
-  // MatrixX where the user will draw - but not the third, it's trifocalTensor who will do it.
-  Eigen::MatrixXi list_user1;
-  Eigen::MatrixXi list_user2;
-  Eigen::MatrixXi list_user3;
   
   // load 
   const char* nameList1 = "input/list1.list";
   const char* nameList2 = "input/list2.list";
   const char* nameList3 = "input/list3.list";
-
-  const char* nameList_user1 = "input/list-user/list1.list";
-  const char* nameList_user2 = "input/list-user/list2.list";
-  const char* nameList_user3 = "input/list-user/list3.list";
   
   // see MathIO.hpp 
   kn::loadMatrix(list1, nameList1);
   kn::loadMatrix(list2, nameList2);
   kn::loadMatrix(list3, nameList3);
 
-/*  Meeeerrrddddddde
+  // MatrixX where the user will draw - but not the third, it's trifocalTensor who will do it.
+  Eigen::MatrixXd list_user1;
+  Eigen::MatrixXd list_user2;
+  Eigen::MatrixXd list_user3;
+
+  const char* nameList_user1 = "input/list-user/list1.list";
+  const char* nameList_user2 = "input/list-user/list2.list";
+  const char* nameList_user3 = "input/list-user/list3.list";
+
   kn::loadMatrix(list_user1, nameList_user1);
   kn::loadMatrix(list_user2, nameList_user2);
-  kn::loadMatrix(list_user3, nameList_user3);
-*/
+  kn::loadMatrix(list_user3, nameList_user3); 
+
+
+
   // save a list
  /*
   kn::saveMatrix(list_user1,"input/list-user/list1.list");
@@ -91,10 +92,14 @@ int main(int argc, char *argv[])
   Uint32 red  = 0xffff0000;
   Uint32 blue = 0xff0000ff;
   Uint32 yellow = 0xffffff00;
-	
+  Uint32 alpha = SDL_MapRGBA(image1->format, 255, 255, 255, 255);
+
+  SDL_SetAlpha(image1, SDL_SRCALPHA, SDL_ALPHA_TRANSPARENT);
+
 	// initial drawing
   // draw points on image1
   
+  /*
   for(int i=0; i<list1.rows(); ++i) {
     fill_circle(screen, list1(i,0), list1(i,1), 3, red);
 	}
@@ -107,11 +112,18 @@ int main(int argc, char *argv[])
     fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
 	}
 	
+	*/
+
+
   // display everything
   SDL_Flip(screen);
   
 	bool done = true;
-	bool listWrite = false;    // allowed to overwrite a point list
+	bool listWrite = false;    
+	bool listInitial = true;
+	bool listUser = false;
+	size_t counterCLickLeft = 0;
+	size_t counterCLickRight = 0;
 	double xClick;
 	double yClick;
 	SDL_Event event;
@@ -120,26 +132,43 @@ int main(int argc, char *argv[])
 	Tensor3d Titi(list1, list2, list3);
 	Titi.printTensor3d();
 
+	cout << "List1_user :" << list_user1 << endl;
+	cout << "List2_user :" << list_user2 << endl;
+	cout << "List3_user :" << list_user3 << endl;
 
-
+	cout << "List1 :" << list1 << endl;
+	cout << "List2 :" << list2 << endl;
+	cout << "List3 :" << list3 << endl;
 	
 	while (done) {
-	
-		
-			// draw points on image1
-		  for(int i=0; i<list1.rows(); ++i) {
-		    fill_circle(screen, list1(i,0), list1(i,1), 3, red);
-			}
-		  // draw points on image2
-		  for(int i=0; i<list2.rows(); ++i) {
-		    fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, blue);
-			}
-		  // draw points on image3
-		  for(int i=0; i<list3.rows(); ++i) {
-		    fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
-			}
-	
 
+		for(int i=0; i<list1.rows(); ++i) {
+		  	if(i<7) {
+		    	fill_circle(screen, list1(i,0), list1(i,1), 0, red);
+		    }
+		    else
+		    	fill_circle(screen, list1(i,0), list1(i,1), 3, red);
+		}
+
+		// draw points on image2
+		for(int i=0; i<list2.rows(); ++i) {
+			if(i<7) {
+				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 0, blue);
+			}
+			else
+				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, blue);
+		}
+		
+		// draw points on image3
+		for(int i=0; i<list3.rows(); ++i) {
+		    if(i<7) {
+		    	fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 0, yellow);
+			}
+			else
+				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
+		}
+
+		
 
 		// display everything
   		SDL_Flip(screen);
@@ -161,16 +190,22 @@ int main(int argc, char *argv[])
 							
   							
 							if(listWrite == false){
-								listWrite = true;
-								
+								listWrite = true;								
 								cout << "Beginning writting mode" << endl;
 							}
 							else {
-  							listWrite = false;
+  								listWrite = false;
 								cout << "Ending writting mode" << endl;
-
+								
 							}
 							
+						break;
+
+						case 'o':
+
+							
+							
+
 						break;
 						
 						default:
@@ -187,19 +222,29 @@ int main(int argc, char *argv[])
 								
 								if(xClick <= 399) {
 									
-									appendMatrix(list1, xClick, yClick);
+									/*SDL_Rect *p_rectangle;
+
+									SDL_FillRect(image1, p_rectangle, SDL_MapRGBA(image1->format,0,0,0,0));*/
+
+
+									appendMatrixXd(list1, xClick, yClick);
+									
 									cout << "Point add to list1" << endl;
 									
-									cout << list_user1 << endl;
+									cout << list1 << endl;
+
+
 								}
 								
 								else if(xClick >= 400 && xClick <= 799) {
 									
-									xClick -= 400;
-									appendMatrix(list2, xClick, yClick);
+									xClick -= 400; // correctif;
+									
+									appendMatrixXd(list2, xClick, yClick);
+									
 									cout << "Point add to list2" << endl;
 									
-									cout << list_user2 << endl;
+									cout << list2 << endl;
 								}
 								else if(xClick >= 800) {
 									cout << "You should click on the 1s and 2nd images," << endl << "else invert images in the folder." << endl;

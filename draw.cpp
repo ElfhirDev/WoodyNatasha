@@ -98,7 +98,9 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
         // Grab a pointer to the left-most pixel for each half of the circle
         Uint8 *target_pixel_a = (Uint8 *)surface->pixels + ((int)(cy + r - dy)) * surface->pitch + x * BPP;
         Uint8 *target_pixel_b = (Uint8 *)surface->pixels + ((int)(cy - r + dy)) * surface->pitch + x * BPP;
- 
+
+
+//  originalement sans initialisation:   for (; x <= cx + dx; x++) 
         for (; x <= cx + dx; x++)
         {
             *(Uint32 *)target_pixel_a = pixel;

@@ -7,8 +7,16 @@
 
 #include "ttt.hpp"
 
-void appendMatrix(Eigen::MatrixXd &list, int x, int y) {
+void appendMatrixXd(Eigen::MatrixXd &list, int x, int y) {
 	int newSizeRow = list.rows() + 1;
-  list.conservativeResize(newSizeRow, 3);
-  list.row(newSizeRow - 1) << x, y, 1;
+	list.conservativeResize(newSizeRow, 3);
+	list.row(newSizeRow - 1) << x, y, 1;
 }
+
+void appendMatrixXi(Eigen::MatrixXi &list, int x, int y) {
+	int newSizeRow = list.rows() + 1;
+	list.conservativeResize(newSizeRow, 3);
+	list.row(newSizeRow - 1) << x, y, 1;
+}
+
+
