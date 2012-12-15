@@ -8,9 +8,10 @@
 
 Tensor3d::Tensor3d(MatrixXd L1, MatrixXd L2, MatrixXd L3)
 {
-	this->L = L1;
-	this->M = L2;
-	this->N = L3;
+	// Tensor3d : 3 x 3 x 3   i.e 3 matrix 3x3, initialized with 0
+	this->L = MatrixXd::Zero(3,3);
+	this->M = MatrixXd::Zero(3,3);
+	this->N = MatrixXd::Zero(3,3);
 
 	this->Adouble = buildMatrixA(L1, L2, L3);
 
@@ -93,22 +94,39 @@ void Tensor3d::printTensor3d() {
 
 // This is sparta !!
 Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
-	Eigen::MatrixXd A(27,28);
+	Eigen::MatrixXd A(28,27);
 
-	// Now check the math subject with Natasha;
-	// We will have to fill that matrix with dirty things like numbers and ...
-	// that's all. Using some for and for boucles (about 4 according to Aurelien, we will see!)
-	//
-	// And some SVD ... from Eigen
+	// For each points
+	for(int p = 0; p<7; ++p) {
 
+		// For each coords of a points - seems like playing with x,y,z
+		for(int k = 0; k<3 ; ++k) {
+
+			// 4 equations - seems like playing with x and y values combination - xx, xy, yx, yy -
+			for(int i = 0; i<2; ++i) {
+				for(int l = 0; l<2; ++l) {
+
+					// As written on the paper :
+					// A(4*p + 2*i +l, 4*p + 2*i ) = L1(p,k) * (  L2(p,0)*L3(p,2)*this->getVal(2,l,k)  -  L2(p,2)*L3(p,2)*this->getVal(i,l,k)  -  L2(p,i)*L3(p,l)*this->getVal(2,2,k)  +  L2(p,2)*L3(p,l)*this->getVal(i,2,k)  );
+
+
+					A(4*p + 2*i +l, 4*p + 2*i ) = L1(p,k) * (  L2(p,0)*L3(p,2)*this->getVal(2,l,k)  -  L2(p,2)*L3(p,2)*this->getVal(i,l,k)  -  L2(p,i)*L3(p,l)*this->getVal(2,2,k)  +  L2(p,2)*L3(p,l)*this->getVal(i,2,k)  );
+
+
+				}
+			}
+
+		}
+
+	}
 
 	return A;
 }
 
 Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
-	Eigen::MatrixXi newA(27,28);
-	for(int i = 0; i < 27; ++i) {
-		for(int j = 0; j < 28; ++j) {
+	Eigen::MatrixXi newA(28,27);
+	for(int i = 0; i < 28; ++i) {
+		for(int j = 0; j < 27; ++j) {
 			newA(i,j) = (int)A(i,j);
 			// Maybe around or ceil or floor function ?
 		}

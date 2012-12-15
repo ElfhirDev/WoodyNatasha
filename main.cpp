@@ -79,20 +79,12 @@ int main(int argc, char *argv[])
   kn::loadMatrix(list_user2, nameList_user2);
   kn::loadMatrix(list_user3, nameList_user3); 
 
-
-
-  // save a list
- /*
-  kn::saveMatrix(list_user1,"input/list-user/list1.list");
-  kn::saveMatrix(list_user2,"input/list-user/list2.list");
-  kn::saveMatrix(list_user3,"input/list-user/list3.list");
-*/
-
   // some colors
   Uint32 red  = 0xffff0000;
   Uint32 blue = 0xff0000ff;
   Uint32 yellow = 0xffffff00;
-  Uint32 alpha = SDL_MapRGBA(image1->format, 255, 255, 255, 255);
+
+ // Uint32 alpha = SDL_MapRGBA(image1->format, 255, 255, 255, 255);
 
   SDL_SetAlpha(image1, SDL_SRCALPHA, SDL_ALPHA_TRANSPARENT);
 
@@ -120,10 +112,6 @@ int main(int argc, char *argv[])
   
 	bool done = true;
 	bool listWrite = false;    
-	bool listInitial = true;
-	bool listUser = false;
-	size_t counterCLickLeft = 0;
-	size_t counterCLickRight = 0;
 	double xClick;
 	double yClick;
 	SDL_Event event;
@@ -131,10 +119,6 @@ int main(int argc, char *argv[])
 	// ---------- Test zone --------------	
 	Tensor3d Titi(list1, list2, list3);
 	Titi.printTensor3d();
-
-	cout << "List1_user :" << list_user1 << endl;
-	cout << "List2_user :" << list_user2 << endl;
-	cout << "List3_user :" << list_user3 << endl;
 
 	cout << "List1 :" << list1 << endl;
 	cout << "List2 :" << list2 << endl;
@@ -221,14 +205,10 @@ int main(int argc, char *argv[])
 							case SDL_BUTTON_LEFT:
 								
 								if(xClick <= 399) {
-									
-									/*SDL_Rect *p_rectangle;
-
-									SDL_FillRect(image1, p_rectangle, SDL_MapRGBA(image1->format,0,0,0,0));*/
-
 
 									appendMatrixXd(list1, xClick, yClick);
-									
+									appendMatrixXd(list_user1, xClick, yClick);
+
 									cout << "Point add to list1" << endl;
 									
 									cout << list1 << endl;
@@ -241,6 +221,7 @@ int main(int argc, char *argv[])
 									xClick -= 400; // correctif;
 									
 									appendMatrixXd(list2, xClick, yClick);
+									appendMatrixXd(list_user2, xClick, yClick);
 									
 									cout << "Point add to list2" << endl;
 									
@@ -277,6 +258,12 @@ int main(int argc, char *argv[])
 		}	// end switch(event)	
 	} // end while(done)  
   
+  // save a list
+
+  kn::saveMatrix(list_user1,"input/save/savelist1.list");
+  kn::saveMatrix(list_user2,"input/save/savelist2.list");
+  kn::saveMatrix(list_user3,"input/save/savelist3.list");
+
 
   // quit sdl
   SDL_FreeSurface(image1); 

@@ -6,3 +6,6 @@ Are given with double.
 The Tensor for doubles will be calculated with doubles.
 Then we will use another Tensor for integers, copying the value and arounder, ceiling or flooring its value.
 
+// maybe not.
+
+The Tensor works for 7 points, no more. It will be great to allowed user to click more points for calculating it.
