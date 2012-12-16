@@ -107,16 +107,27 @@ int main(int argc, char *argv[])
 
 	// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
 	Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
-	
+
+/*
+	cout << "   A matrix : " << endl;
+	for(int i = 0; i<28; ++i) {
+		for(int j = 0; j<27; ++j) {
+			cout << " " << A(i,j);
+		}
+		cout << endl;
+	}
+*/	
 	// SVD decomposition of A
 	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
 
-	// Creation of Vector 27 elts = 0;
-	VectorXd ZeroZero = MatrixXd::Zero(27,1);
-	
+	// Creation of Vector 28 elts = 0;
+	VectorXd ZeroZero = MatrixXd::Zero(28,1);
+
 	// Solving equations with least square
 	//
-	// VectorXd t =  svd.solve(ZeroZero);
+	MatrixXd t =  svd.solve(ZeroZero);
+	
+	//VectorXd t = svd.matrixU();
 
 
 	cout << "List1 :" << list1 << endl;
@@ -185,7 +196,7 @@ int main(int argc, char *argv[])
 						break;
 
 						case 'o':
-
+							cout << "Je suis une variable" << endl;
 							
 							
 
@@ -263,6 +274,8 @@ int main(int argc, char *argv[])
   kn::saveMatrix(list_user2,"input/save/savelist2.list");
   kn::saveMatrix(list_user3,"input/save/savelist3.list");
 
+  kn::saveMatrix(A, "input/save/A.list");
+  kn::saveMatrix(t, "input/save/t.list");
 
   // quit sdl
   SDL_FreeSurface(image1); 

@@ -95,6 +95,7 @@ void Tensor3d::printTensor3d() {
 // This is sparta !!
 Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 	Eigen::MatrixXd A(28,27);
+	int inc = 0;
 
 	// For each points
 	for(int p = 0; p<7; ++p) {
@@ -108,9 +109,21 @@ Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 
 					// As written on the paper :
 					// A(4*p + 2*i +l, 4*p + 2*i ) = L1(p,k) * (  L2(p,0)*L3(p,2)*this->getVal(2,l,k)  -  L2(p,2)*L3(p,2)*this->getVal(i,l,k)  -  L2(p,i)*L3(p,l)*this->getVal(2,2,k)  +  L2(p,2)*L3(p,l)*this->getVal(i,2,k)  );
+					//
+					// Other solutions
+					// 4*p + i + l  = {0;27}       9*k + (i+l) + 3*inc = {0;26}  - what is 'inc' ?
 
 
-					A(4*p + 2*i +l, 4*p + 2*i ) = L1(p,k) * (  L2(p,0)*L3(p,2)*this->getVal(2,l,k)  -  L2(p,2)*L3(p,2)*this->getVal(i,l,k)  -  L2(p,i)*L3(p,l)*this->getVal(2,2,k)  +  L2(p,2)*L3(p,l)*this->getVal(i,2,k)  );
+					// there are 27 columns, divided by the 3 values that k can have 
+					// how to fill 9 cols ? i+l = {0;2}, it will provide 3 values ; Now we will have to
+					// add a step of 3 for columns n°3,4,5 and a step of 6 for columns n°6,7,8
+					// So 3*inc with inc = {0;2} ; inc is independant from i,l,k,p.
+					// And then k = 1, so inc = 0 for restart. And also for k = 2.
+
+					if(inc == 2) { inc = 0; }
+					if(i+l == 2) { ++inc; }
+
+					A(4*p + 2*i + l, 9*k + (i+l) + 3*inc) = L1(p,k) * (  L2(p,0)*L3(p,2)  -  L2(p,2)*L3(p,2)  -  L2(p,i)*L3(p,l)  +  L2(p,2)*L3(p,l)  );
 
 
 				}
@@ -122,6 +135,7 @@ Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 
 	return A;
 }
+
 
 Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
 	Eigen::MatrixXi newA(28,27);

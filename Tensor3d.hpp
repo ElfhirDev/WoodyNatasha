@@ -2,6 +2,7 @@
 #define __TENSOR3D_H__
 
 #include <iostream>
+#include <cmath>
 #include "MathIO.hpp"
 #include "Eigen/Dense" 
 
