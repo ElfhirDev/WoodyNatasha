@@ -103,36 +103,35 @@ int main(int argc, char *argv[])
 	
 	// ---------- Test zone --------------	
 	Tensor3d Titi(list1, list2, list3);
-	Titi.printTensor3d();
+	
 
 	// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
 	Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
 
-/*
-	cout << "   A matrix : " << endl;
-	for(int i = 0; i<28; ++i) {
-		for(int j = 0; j<27; ++j) {
-			cout << " " << A(i,j);
-		}
-		cout << endl;
-	}
-*/	
+
 	// SVD decomposition of A
-	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+	JacobiSVD<MatrixXd> svd(A, ComputeFullU | ComputeFullV);
 
 	// Creation of Vector 28 elts = 0;
 	VectorXd ZeroZero = MatrixXd::Zero(28,1);
 
-	// Solving equations with least square
+	// Solving equations with least square --- or not ?e
 	//
-	MatrixXd t =  svd.solve(ZeroZero);
+	//MatrixXd t =  svd.solve(ZeroZero);
 	
-	//VectorXd t = svd.matrixU();
+	VectorXd t = MatrixXd::Zero(27,1);
+	
+	for(int i = 0; i<27 ; ++i) {
+		t(i) = svd.matrixV()(i,26);
+	}
+	
+	// Something very ugly
+	Titi.setVal(t);
+
+	Titi.printTensor3d();
 
 
-	cout << "List1 :" << list1 << endl;
-	cout << "List2 :" << list2 << endl;
-	cout << "List3 :" << list3 << endl;
+	
 	
 	while (done) {
 

@@ -28,13 +28,21 @@ class Tensor3d {
 		MatrixXd getL();
 		MatrixXd getM();
 		MatrixXd getN();
+
+		double getL(unsigned int, unsigned int);
+
 		void setL(MatrixXd L1);
 		void setM(MatrixXd L2);
 		void setN(MatrixXd L3);
+
+		void setLij(unsigned int i, unsigned int j, double tvalue);
+		void setMij(unsigned int i, unsigned int j, double tvalue);
+		void setNij(unsigned int i, unsigned int j, double tvalue);
 		
 		int getRows();
 		
 		double getVal(unsigned int i, unsigned int j, unsigned int k);
+		void setVal(VectorXd t);
 		
 		void printTensor3d();
 				
@@ -42,6 +50,7 @@ class Tensor3d {
  		 * return double
  		 */
 		double operator()(unsigned int i, unsigned int j, unsigned int k);
+
 
 		Eigen::MatrixXd buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3);
 		Eigen::MatrixXi aroundMatrixA(Eigen::MatrixXd &A);
