@@ -55,7 +55,7 @@ class Tensor3d {
 		Eigen::MatrixXd buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3);
 		Eigen::MatrixXi aroundMatrixA(Eigen::MatrixXd &A);
 
-		Eigen::MatrixXi transfert(MatrixXi list1, MatrixXi list2);
+		Eigen::MatrixXd transfert(MatrixXd list1, MatrixXd list2);
 };
 
 

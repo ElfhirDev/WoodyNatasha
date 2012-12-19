@@ -130,10 +130,28 @@ int main(int argc, char *argv[])
 
 	Titi.printTensor3d();
 
+	/*
+	MatrixXd test = A*t;
 
-	
-	
+	for(int i = 0; i<test.rows(); ++i) {
+		for(int j = 0; j<test.cols(); ++j) {
+			cout << " " << test(i,j);
+		}
+		cout << endl;
+	}
+	*/
+
+	MatrixXd A2;
+	MatrixXd X;
+
 	while (done) {
+
+		//seg fault 
+		A2 = Titi.transfert(list_user1, list_user2);
+		//X = svd.solve(ZeroZero);
+
+
+		//appendMatrixXd(list3, A2(0,0), A2(0,1));
 
 		for(int i=0; i<list1.rows(); ++i) {
 		  	if(i<7) {
