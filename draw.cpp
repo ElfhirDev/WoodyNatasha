@@ -11,8 +11,10 @@
  */
 void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
-    Uint8 *target_pixel = (Uint8 *)surface->pixels + y * surface->pitch + x * 4;
+    SDL_LockSurface(surface);
+    Uint8 *target_pixel = (Uint8 *)surface->pixels + y * surface->pitch + x *4;
     *(Uint32 *)target_pixel = pixel;
+    SDL_UnlockSurface(surface);
 }
  
 /*
@@ -72,6 +74,7 @@ void draw_circle(SDL_Surface *surface, int n_cx, int n_cy, int radius, Uint32 pi
     }
 }
 
+
 void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
 {
     // Note that there is more to altering the bitrate of this 
@@ -82,6 +85,7 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
  
     double r = (double)radius;
  
+    SDL_LockSurface(surface);
     for (double dy = 1; dy <= r; dy += 1.0)
     {
         // This loop is unrolled a bit, only iterating through half of the
@@ -95,12 +99,14 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
         double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
         int x = cx - dx;
  
+        
+
         // Grab a pointer to the left-most pixel for each half of the circle
         Uint8 *target_pixel_a = (Uint8 *)surface->pixels + ((int)(cy + r - dy)) * surface->pitch + x * BPP;
         Uint8 *target_pixel_b = (Uint8 *)surface->pixels + ((int)(cy - r + dy)) * surface->pitch + x * BPP;
 
 
-//  originalement sans initialisation:   for (; x <= cx + dx; x++) 
+        //  originalement sans initialisation:   for (; x <= cx + dx; x++) 
         for (; x <= cx + dx; x++)
         {
             *(Uint32 *)target_pixel_a = pixel;
@@ -109,5 +115,7 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
             target_pixel_b += BPP;
         }
     }
+    SDL_UnlockSurface(surface);
 }
+
 

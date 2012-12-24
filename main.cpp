@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
   Uint32 red  = 0xffff0000;
   Uint32 blue = 0xff0000ff;
   Uint32 yellow = 0xffffff00;
+  Uint32 cream = 0xffe6e6fa;
 
  // Uint32 alpha = SDL_MapRGBA(image1->format, 255, 255, 255, 255);
 
@@ -97,8 +98,13 @@ int main(int argc, char *argv[])
   
 	bool done = true;
 	bool listWrite = false;    
+	bool lockSurface = true;
 	double xClick;
 	double yClick;
+	int count1 = 0;
+	int count2 = 0;
+	int temp1 = 36;
+	int temp2 = 24;
 	SDL_Event event;
 	
 	// ---------- Test zone --------------	
@@ -110,14 +116,12 @@ int main(int argc, char *argv[])
 
 
 	// SVD decomposition of A
-	JacobiSVD<MatrixXd> svd(A, ComputeFullU | ComputeFullV);
+	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
 
-	// Creation of Vector 28 elts = 0;
-	VectorXd ZeroZero = MatrixXd::Zero(28,1);
-
-	// Solving equations with least square --- or not ?e
+	// VectorXd ZeroZero = MatrixXd::Zero(28,1);
+	// Solving equations with least square --- or not to be ?
 	//
-	//MatrixXd t =  svd.solve(ZeroZero);
+	// MatrixXd t =  svd.solve(ZeroZero);
 	
 	VectorXd t = MatrixXd::Zero(27,1);
 	
@@ -125,12 +129,15 @@ int main(int argc, char *argv[])
 		t(i) = svd.matrixV()(i,26);
 	}
 	
-	// Something very ugly
+	// Set values in Tensor Titi for each Matrix L, M, N.
 	Titi.setVal(t);
 
 	Titi.printTensor3d();
 
+
 	/*
+	// A*t == 0   at least squares.
+
 	MatrixXd test = A*t;
 
 	for(int i = 0; i<test.rows(); ++i) {
@@ -142,16 +149,45 @@ int main(int argc, char *argv[])
 	*/
 
 	MatrixXd A2;
-	MatrixXd X;
+	VectorXd X2 = MatrixXd::Zero(2,1);
+
+	MatrixXd V;
+	MatrixXd U;
+
+	
 
 	while (done) {
 
-		//seg fault 
-		A2 = Titi.transfert(list_user1, list_user2);
-		//X = svd.solve(ZeroZero);
+		if(count1 > 0 && count2 > 0) {
+			
+			A2 = Titi.transfertTo3(list_user1, list_user2);
 
 
-		//appendMatrixXd(list3, A2(0,0), A2(0,1));
+			// SVD decomposition of A2
+			JacobiSVD<MatrixXd> svd2(A2, ComputeThinU | ComputeThinV);
+
+/*
+			cout << "  svd2.matrixV rows : " << svd2.matrixV().rows() << "  svd2.matrixV cols : " << svd2.matrixV().cols() << endl;
+			cout << "  svd2.matrixU rows : " << svd2.matrixU().rows() << "  svd2.matrixU cols : " << svd2.matrixU().cols() << endl;
+*/	
+
+			V = svd2.matrixV();
+			U = svd2.matrixU();
+
+			X2(0) = V(0,0);
+			X2(1) = V(1,1);
+				
+			
+			count1 = 0;
+			count2 = 0;
+
+			temp1 = abs(X2(0));
+			temp2 = abs(X2(1));
+
+			
+			appendMatrixXd(list3, temp1, temp2);
+			
+		}
 
 		for(int i=0; i<list1.rows(); ++i) {
 		  	if(i<7) {
@@ -171,16 +207,19 @@ int main(int argc, char *argv[])
 		}
 		
 		// draw points on image3
+
 		for(int i=0; i<list3.rows(); ++i) {
 		    if(i<7) {
 		    	fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 0, yellow);
 			}
 			else
-				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
+				set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
+				//fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
 		}
-
+		 
 		
-
+		
+		
 		// display everything
   		SDL_Flip(screen);
 		
@@ -235,11 +274,13 @@ int main(int argc, char *argv[])
 
 									appendMatrixXd(list1, xClick, yClick);
 									appendMatrixXd(list_user1, xClick, yClick);
+									//appendMatrixXd(list3, xClick, yClick);
 
 									cout << "Point add to list1" << endl;
 									
 									cout << list1 << endl;
 
+									++count1;
 
 								}
 								
@@ -253,6 +294,9 @@ int main(int argc, char *argv[])
 									cout << "Point add to list2" << endl;
 									
 									cout << list2 << endl;
+
+									++count2;
+
 								}
 								else if(xClick >= 800) {
 									cout << "You should click on the 1s and 2nd images," << endl << "else invert images in the folder." << endl;
@@ -293,13 +337,21 @@ int main(int argc, char *argv[])
 
   kn::saveMatrix(A, "input/save/A.list");
   kn::saveMatrix(t, "input/save/t.list");
+  
+  kn::saveMatrix(A2, "input/save/A2.list");
+  kn::saveMatrix(X2, "input/save/X2.list");
+
+  kn::saveMatrix(V, "input/save/V-svd2.list");
+  kn::saveMatrix(U, "input/save/U-svd2.list");
+  
+  
 
   // quit sdl
   SDL_FreeSurface(image1); 
   SDL_FreeSurface(image2); 
   SDL_FreeSurface(image3); 
   IMG_Quit();
-  SDL_Quit();
+  SDL_Quit();  // it frees screen, so don't call "SDL_FreeSurface(screen);"
 
   return EXIT_SUCCESS;
 }

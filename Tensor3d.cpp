@@ -256,115 +256,44 @@ Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
 }
 
 
-Eigen::MatrixXd Tensor3d::transfert(Eigen::MatrixXd L1, Eigen::MatrixXd L2) {
-	Eigen::MatrixXd A = MatrixXd::Zero(4,27);
+Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
+	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
 
-	// Using the MatrixXi newA = leTensor.aroundMatrixA(leTensor.buildMatrixA());
-	// with Some SVD ... too
-
-	
-		// Each points coords - x,y,z
-		for(int k = 0; k<3 ; ++k) {
-
-			// 4 equations - seems like playing with x and y values combination - xx, xy, yx, yy -c
-			for(int i = 0; i<2; ++i) {
-				for(int l = 0; l<2; ++l) {
-					if(k == 0) {
-						if(i==0 && l==0) {
-							A(2*i + l, 6) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 0) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 8) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 2) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );
-						}
-						else if(i==0 && l==1) {
-							A(2*i + l, 7) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 1) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 8) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 2) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );
-						}
-						else if(i==1 && l==0) {
-							A(2*i + l, 6) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 3) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 8) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 5) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );	
-						}
-						else if(i==1 && l==1) {
-							A(2*i + l, 7) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 4) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 8) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 2) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );	
-						}
-						else {}
-					}
-
-					else if(k==1) {
-						if(i==0 && l==0) {
-							A(2*i + l, 15) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l,  9) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 17) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 11) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );
-						}
-						else if(i==0 && l==1) {
-							A(2*i + l, 16) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 10) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 17) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 11) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );
-						}
-						else if(i==1 && l==0) {
-							A(2*i + l, 15) = L1(0,k) * (  L2(0,i)*getVal(2,l,k));
-							A(2*i + l, 12) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 17) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 14) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );	
-						}
-						else if(i==1 && l==1) {
-							A(2*i + l, 16) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 13) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 17) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 14) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );	
-						}
-						else {}
-
-					}		
-
-					else if(k==2) {
-						if(i==0 && l==0) {
-							A(2*i + l, 24) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 18) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k));
-							A(2*i + l, 26) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 20) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );
-						}
-						else if(i==0 && l==1) {
-							A(2*i + l, 25) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 19) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 26) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 20) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );
-						}
-						else if(i==1 && l==0) {
-							A(2*i + l, 24) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 21) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 26) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 23) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );	
-						}
-						else if(i==1 && l==1) {
-							A(2*i + l, 25) = L1(0,k) * (  L2(0,i)*getVal(2,l,k) );
-							A(2*i + l, 22) = L1(0,k) * ( -L2(0,2)*getVal(i,l,k) );
-							A(2*i + l, 26) = L1(0,k) * ( -L2(0,i)*getVal(2,2,k) );
-							A(2*i + l, 23) = L1(0,k) * (  L2(0,2)*getVal(i,2,k) );	
-						}
-						else {}
-					}
-					else {}	
-				}
+	for(int i = 0; i<2; ++i) {
+		for(int l = 0; l<2; ++l) {
+				
+			if(i==0 && l==0) {
+				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
 			}
-			
+			else if(i==0 && l==1) {
+				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
+			}
+			else if(i==1 && l==0) {
+				A(2*i + l, 1) = LI(1,1) * (  -LJ(1,i)*getVal(2,2,0) + LJ(0,2)*getVal(i,2,0) );	
+			}
+			else if(i==1 && l==1) {
+				A(2*i + l, 1) = LI(1,1) * (  -LJ(1,i)*getVal(2,l,0) + LJ(0,2)*getVal(i,2,0) );	
+			}
+			else {}
 		}
+			
+	}
 	
-
-
 	return A;
 }
 
- 
+ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
+ 	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
+
+
+ 	return A;
+ }
+
+ Eigen::MatrixXd Tensor3d::transfertTo2(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
+ 	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
+
+ 	return A;
+ }
  
  
  
