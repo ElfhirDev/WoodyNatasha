@@ -16,6 +16,27 @@ void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
     *(Uint32 *)target_pixel = pixel;
     SDL_UnlockSurface(surface);
 }
+
+/* Draw a 2 lines which cross at the pixel point
+ * Implemented by Jérémy TA
+ *
+ */
+void draw_grid(SDL_Surface *surface, int x, int y, Uint32 pixel)
+{
+    SDL_LockSurface(surface);
+    
+    for(int i = 0; i<400; ++i) {
+        Uint8 *target_pixel = (Uint8 *)surface->pixels + y * surface->pitch + x *i;
+        *(Uint32 *)target_pixel = pixel;
+    }
+    
+    for(int j = 0; j<300; ++j) {
+        Uint8 *target_pixel = (Uint8 *)surface->pixels + y*j * surface->pitch + x;
+        *(Uint32 *)target_pixel = pixel;
+    }    
+    
+    SDl_UnlockSurface(surface);
+}
  
 /*
  * This is an implementation of the Midpoint Circle Algorithm 
