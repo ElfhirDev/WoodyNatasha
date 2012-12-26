@@ -125,18 +125,21 @@ int main(int argc, char *argv[])
 	// SVD decomposition of A
 	// See Eigen3 doc
 	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
-
-	// VectorXd ZeroZero = MatrixXd::Zero(28,1);
-	// Solving equations with least square --- or not to be ?
-	//
-	// MatrixXd t =  svd.solve(ZeroZero);
 	
 	VectorXd t = MatrixXd::Zero(27,1);
+
+	/*
+	VectorXd zero = MatrixXd::Zero(28,1);
+	t = svd.solve(zero);
+	*/
+
 	
 	for(int i = 0; i<27 ; ++i) {
 		t(i) = svd.matrixV()(i,26);
 	}
 	
+	
+
 	// Set values in Tensor Titi for each Matrix L, M, N.
 	Titi.setVal(t);
 
@@ -156,11 +159,8 @@ int main(int argc, char *argv[])
 	}
 	*/
 
-	MatrixXd A2;
-	VectorXd X2 = MatrixXd::Zero(2,1);
+	VectorXd X2;
 
-	MatrixXd V;
-	MatrixXd U;
 
 	
 
@@ -168,29 +168,26 @@ int main(int argc, char *argv[])
 
 		if(count1 > 0 && count2 > 0) {
 			
-			A2 = Titi.transfertTo3(list_user1, list_user2);
+			X2 = Titi.transfertTo3(list_user1, list_user2);
 
-
-			// SVD decomposition of A2
-			JacobiSVD<MatrixXd> svd2(A2, ComputeThinU | ComputeThinV);
 
 /*
 			cout << "  svd2.matrixV rows : " << svd2.matrixV().rows() << "  svd2.matrixV cols : " << svd2.matrixV().cols() << endl;
 			cout << "  svd2.matrixU rows : " << svd2.matrixU().rows() << "  svd2.matrixU cols : " << svd2.matrixU().cols() << endl;
 */	
 
-			V = svd2.matrixV();
-			U = svd2.matrixU();
 
-			X2(0) = V(0,0);
+			/*
+			X2(0) = V(0,1);
 			X2(1) = V(1,1);
-				
+			*/
+
 			
 			count1 = 0;
 			count2 = 0;
 
-			temp1 = abs(X2(0))+50;
-			temp2 = abs(X2(1))+80;
+			temp1 = X2(0);
+			temp2 = X2(1);
 
 			
 			appendMatrixXd(list3, temp1, temp2);
@@ -353,12 +350,8 @@ int main(int argc, char *argv[])
   kn::saveMatrix(A, "input/save/A.list");
   kn::saveMatrix(t, "input/save/t.list");
   
-  kn::saveMatrix(A2, "input/save/A2.list");
   kn::saveMatrix(X2, "input/save/X2.list");
 
-  kn::saveMatrix(V, "input/save/V-svd2.list");
-  kn::saveMatrix(U, "input/save/U-svd2.list");
-  
   
 
   // quit sdl

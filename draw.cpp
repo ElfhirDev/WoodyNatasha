@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "draw.hpp"
 
+
 /*
  * This is a 32-bit pixel function created with help from this
  * website: http://www.libsdl.org/intro.en/usingvideo.html
