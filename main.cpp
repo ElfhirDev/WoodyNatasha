@@ -63,12 +63,13 @@ int main(int argc, char *argv[])
   const char* nameList2 = "input/list2.list";
   const char* nameList3 = "input/list3.list";
   
-  // see MathIO.hpp 
+  // see MathIO.hpp ; it loads the points from a file in matrix of "list"
   kn::loadMatrix(list1, nameList1);
   kn::loadMatrix(list2, nameList2);
   kn::loadMatrix(list3, nameList3);
 
-  // MatrixX where the user will draw - but not the third, it's trifocalTensor who will do it.
+  // MatrixX where the user will add xClick and yClick and 1 at the end. One of them will be filled by transfert.
+  // For the beginning it's list_user3.
   Eigen::MatrixXd list_user1;
   Eigen::MatrixXd list_user2;
   Eigen::MatrixXd list_user3;
@@ -81,14 +82,16 @@ int main(int argc, char *argv[])
   kn::loadMatrix(list_user2, nameList_user2);
   kn::loadMatrix(list_user3, nameList_user3); 
 
-  // some colors
+  // some colors ; used in fill_circle, set_pixel ; hexadecimal as webcolor.
   Uint32 red  = 0xffff0000;
   Uint32 blue = 0xff0000ff;
   Uint32 yellow = 0xffffff00;
   Uint32 cream = 0xffe6e6fa;
 
+ // Old tentative to put pixel transparent. Not effective, but au cas où.
  // Uint32 alpha = SDL_MapRGBA(image1->format, 255, 255, 255, 255);
 
+  // idem.
   SDL_SetAlpha(image1, SDL_SRCALPHA, SDL_ALPHA_TRANSPARENT);
 
 
@@ -96,9 +99,11 @@ int main(int argc, char *argv[])
   // display everything
   SDL_Flip(screen);
   
+  	// done for while render, listWrite for right to clic - type 'l'
+    // count1 and count2 for the right to do the transfer : not before clicking on the 2 first images.
+  	// temp1 and temp2 for testing something but ...
 	bool done = true;
 	bool listWrite = false;    
-	bool lockSurface = true;
 	double xClick;
 	double yClick;
 	int count1 = 0;
@@ -108,14 +113,17 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	
 	// ---------- Test zone --------------	
+	// Titi is our object Tensor3d.
 	Tensor3d Titi(list1, list2, list3);
 	
 
 	// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
+	// See Tensor3d.cpp
 	Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
 
 
 	// SVD decomposition of A
+	// See Eigen3 doc
 	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
 
 	// VectorXd ZeroZero = MatrixXd::Zero(28,1);
@@ -181,8 +189,8 @@ int main(int argc, char *argv[])
 			count1 = 0;
 			count2 = 0;
 
-			temp1 = abs(X2(0));
-			temp2 = abs(X2(1));
+			temp1 = abs(X2(0))+50;
+			temp2 = abs(X2(1))+80;
 
 			
 			appendMatrixXd(list3, temp1, temp2);
@@ -209,12 +217,19 @@ int main(int argc, char *argv[])
 		// draw points on image3
 
 		for(int i=0; i<list3.rows(); ++i) {
+
 		    if(i<7) {
 		    	fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 0, yellow);
 			}
-			else
-				set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
+			else {
+				
 				//fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
+				
+				draw_grid(screen, list3(i,0)+image1->w+image2->w, list3(i,1), cream);
+				
+				//set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
+
+			}
 		}
 		 
 		

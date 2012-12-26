@@ -264,6 +264,38 @@ Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 				
 			if(i==0 && l==0) {
 				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
+				A(2*i + l, 1) = LI(1,1) * (  -LJ(1,i)*getVal(2,2,0) + LJ(0,2)*getVal(i,2,0) );
+			}
+			else if(i==0 && l==1) {
+				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
+				A(2*i + l, 1) = LI(1,1) * (  -LJ(1,i)*getVal(2,2,0) + LJ(0,2)*getVal(i,2,0) );
+			}
+			else if(i==1 && l==0) {
+				A(2*i + l, 1) = LI(1,1) * (  -LJ(1,i)*getVal(2,2,0) + LJ(0,2)*getVal(i,2,0) );	
+				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
+			}
+			else if(i==1 && l==1) {
+				A(2*i + l, 1) = LI(1,1) * (  -LJ(1,i)*getVal(2,l,0) + LJ(0,2)*getVal(i,2,0) );	
+				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
+			}
+			else {}
+		}
+			
+	}
+	
+	return A;
+}
+
+// avrfkeoakeovkoappodkafrvkoo transfert.
+/*
+Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
+	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
+
+	for(int i = 0; i<2; ++i) {
+		for(int l = 0; l<2; ++l) {
+				
+			if(i==0 && l==0) {
+				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
 			}
 			else if(i==0 && l==1) {
 				A(2*i + l, 0) = LI(1,0) * (  LJ(1,i)*getVal(2,l,0) - LJ(0,2)*getVal(i,l,0) );
@@ -281,6 +313,8 @@ Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	
 	return A;
 }
+*/
+
 
  Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
  	Eigen::MatrixXd A = MatrixXd::Zero(4,2);

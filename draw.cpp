@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 #include "draw.hpp"
 
 /*
@@ -12,30 +13,23 @@
 void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
     SDL_LockSurface(surface);
-    Uint8 *target_pixel = (Uint8 *)surface->pixels + y * surface->pitch + x *4;
+    Uint8 *target_pixel = (Uint8 *)surface->pixels + y * surface->pitch + x*4;
     *(Uint32 *)target_pixel = pixel;
     SDL_UnlockSurface(surface);
 }
 
 /* Draw a 2 lines which cross at the pixel point
  * Implemented by Jérémy TA
- *
+ * -- > just for a pixel point on image 3 ; it should be improved.
  */
 void draw_grid(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
-    SDL_LockSurface(surface);
-    
-    for(int i = 0; i<400; ++i) {
-        Uint8 *target_pixel = (Uint8 *)surface->pixels + y * surface->pitch + x *i;
-        *(Uint32 *)target_pixel = pixel;
-    }
-    
-    for(int j = 0; j<300; ++j) {
-        Uint8 *target_pixel = (Uint8 *)surface->pixels + y*j * surface->pitch + x;
-        *(Uint32 *)target_pixel = pixel;
-    }    
-    
-    SDl_UnlockSurface(surface);
+    // Vertical line.
+    Line(surface, x, 1, x, 300, pixel);
+
+    // Horizontal one.
+    Line(surface, 800, y, 1200, y, pixel);
+
 }
  
 /*
@@ -137,6 +131,55 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
         }
     }
     SDL_UnlockSurface(surface);
+}
+
+// Bresenham's line algorithm
+// For drawing line. 
+// A SDL_Surface where drawing, Point A coords, Point B coords, then color.
+//
+void Line(SDL_Surface *surface, int x1, int y1, int x2, int y2, Uint32 color )
+{
+    
+    const bool steep = (abs(y2 - y1) > abs(x2 - x1));
+    if(steep)
+    {
+        std::swap(x1, y1);
+        std::swap(x2, y2);
+    }
+
+    if(x1 > x2)
+    {
+        std::swap(x1, x2);
+        std::swap(y1, y2);
+    }
+
+    int dx = x2 - x1;
+    int dy = abs(y2 - y1);
+
+    int error = dx / 2;
+    int ystep = (y1 < y2) ? 1 : -1;
+    int y = (int)y1;
+
+    int maxX = (int)x2;
+
+    for(int x=(int)x1; x<maxX; x++)
+    {
+        if(steep)
+        {
+            set_pixel(surface, y, x, color);
+        }
+        else
+        {
+            set_pixel(surface, x, y, color);
+        }
+
+        error -= dy;
+        if(error < 0)
+        {
+            y += ystep;
+            error += dx;
+        }
+    }
 }
 
 
