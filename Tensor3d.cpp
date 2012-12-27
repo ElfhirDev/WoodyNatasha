@@ -146,7 +146,6 @@ Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 			for(int i = 0; i<2; ++i) {
 				for(int l = 0; l<2; ++l) {
 
-					//	L1(p,k) * (  L2(p,i)*L3(p,2)  -  L2(p,2)*L3(p,2)  -  L2(p,i)*L3(p,l)  +  L2(p,2)*L3(p,l)  );
 					if(k == 0) {
 						if(i==0 && l==0) {
 							A(4*p + 2*i + l, 6) = L1(p,k) * (  L2(p,i)*L3(p,2) );
@@ -233,28 +232,30 @@ Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 					}
 					else {}		
 
-				}
-			}
 
-		}
+				} // end for l
+			} // end for i
+ 
+		} // end for k
 
-	}
+	} // end for p
 
 	return A;
 }
 
-
+// not used.
 Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
 	Eigen::MatrixXi newA(28,27);
 	for(int i = 0; i < 28; ++i) {
 		for(int j = 0; j < 27; ++j) {
 			newA(i,j) = (int)A(i,j);
-			// Maybe around or ceil or floor function ?
 		}
 	}
 
 	return newA;
 }
+
+
 
 
 Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
@@ -263,25 +264,25 @@ Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	Eigen::VectorXd b = MatrixXd::Zero(4,1);
 
 	int end = LI.rows() - 1 ;
-
+	
 	for(int i = 0; i<2; ++i) {
 		for(int l = 0; l<2; ++l) {
 				
 			if(i==0 && l==0) {
-				A2(2*i + l, 0) = ( LI(end,i)*LJ(end,2)*getVal(2,l,0) - LI(end,2)*LJ(end,2)*getVal(i,l,0) - LI(end,i)*LJ(end,l)*getVal(2,2,0) + LI(end,2)*LJ(end,l)*getVal(i,2,0) );
-				A2(2*i + l, 1) = ( LI(end,i)*LJ(end,2)*getVal(2,l,1) - LI(end,2)*LJ(end,2)*getVal(i,l,1) - LI(end,i)*LJ(end,l)*getVal(2,2,1) + LI(end,2)*LJ(end,l)*getVal(i,2,1) );
+				A2(2*i + l, 0) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,0) - LI(end,2)*getVal(i,l,0 ) ) );
+				A2(2*i + l, 1) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,1) - LI(end,2)*getVal(i,l,1 ) ) );
 			}
 			else if(i==0 && l==1) {
-				A2(2*i + l, 0) = ( LI(end,i)*LJ(end,2)*getVal(2,l,0) - LI(end,2)*LJ(end,2)*getVal(i,l,0) - LI(end,i)*LJ(end,l)*getVal(2,2,0) + LI(end,2)*LJ(end,l)*getVal(i,2,0) );
-				A2(2*i + l, 1) = ( LI(end,i)*LJ(end,2)*getVal(2,l,1) - LI(end,2)*LJ(end,2)*getVal(i,l,1) - LI(end,i)*LJ(end,l)*getVal(2,2,1) + LI(end,2)*LJ(end,l)*getVal(i,2,1) );
+				A2(2*i + l, 0) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,0) - LI(end,2)*getVal(i,l,0 ) ) );
+				A2(2*i + l, 1) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,1) - LI(end,2)*getVal(i,l,1 ) ) );
 			}
 			else if(i==1 && l==0) {
-				A2(2*i + l, 0) = ( LI(end,i)*LJ(end,2)*getVal(2,l,0) - LI(end,2)*LJ(end,2)*getVal(i,l,0) - LI(end,i)*LJ(end,l)*getVal(2,2,0) + LI(end,2)*LJ(end,l)*getVal(i,2,0) );
-				A2(2*i + l, 1) = ( LI(end,i)*LJ(end,2)*getVal(2,l,1) - LI(end,2)*LJ(end,2)*getVal(i,l,1) - LI(end,i)*LJ(end,l)*getVal(2,2,1) + LI(end,2)*LJ(end,l)*getVal(i,2,1) );
+				A2(2*i + l, 0) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,0) - LI(end,2)*getVal(i,l,0 ) ) );
+				A2(2*i + l, 1) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,1) - LI(end,2)*getVal(i,l,1 ) ) );
 			}
 			else if(i==1 && l==1) {
-				A2(2*i + l, 0) = ( LI(end,i)*LJ(end,2)*getVal(2,l,0) - LI(end,2)*LJ(end,2)*getVal(i,l,0) - LI(end,i)*LJ(end,l)*getVal(2,2,0) + LI(end,2)*LJ(end,l)*getVal(i,2,0) );
-				A2(2*i + l, 1) = ( LI(end,i)*LJ(end,2)*getVal(2,l,1) - LI(end,2)*LJ(end,2)*getVal(i,l,1) - LI(end,i)*LJ(end,l)*getVal(2,2,1) + LI(end,2)*LJ(end,l)*getVal(i,2,1) );
+				A2(2*i + l, 0) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,0) - LI(end,2)*getVal(i,l,0 ) ) );
+				A2(2*i + l, 1) = ( LJ(end,2) * ( LI(end,i)*getVal(2,l,1) - LI(end,2)*getVal(i,l,1 ) ) );
 			}
 			else {}
 
@@ -304,6 +305,7 @@ Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 
 	return X2;
 }
+
 
 /*
 Eigen::MatrixXd Tensor3d::transfertTo3(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {

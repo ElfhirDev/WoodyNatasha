@@ -108,8 +108,8 @@ int main(int argc, char *argv[])
 	double yClick;
 	int count1 = 0;
 	int count2 = 0;
-	int temp1 = 36;
-	int temp2 = 24;
+	int temp1 = 0;
+	int temp2 = 0;
 	SDL_Event event;
 	
 	// ---------- Test zone --------------	

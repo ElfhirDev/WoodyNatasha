@@ -78,7 +78,7 @@ l'indice de colonne est soigneusement déterminé grâce à un brouillon sur pap
 Le transfert :
 
 En fait c'est pas exactement ce qu'à dit Nozick dans l'énoncé.
-Il nous faut une matrice A2 4*2, et résoudre
+Il nous faut une matrice A2 4*2, et résoudre.
 A2 * X = b ; b c'est un vecteur de 4 lignes qui contient des valeurs non nulles, ceux sont les valeurs du points cliqués, affecté de coefficient du tenseur qu'on a calculé aupparavent.
 
 b a 4 lignes, car on a 4 équations. Ce n'est pas 2 lignes comme je l'ai pensé car on a 2 inconnues.
@@ -90,8 +90,9 @@ Le résultat est mis dans le vecteur X2 de taille 2.
 
 
 
+Voilà le topo, maintenant la pratique : 
 
-
+On prend la formule section 3.6 de la page 7 de l'énoncé
 
 
 
