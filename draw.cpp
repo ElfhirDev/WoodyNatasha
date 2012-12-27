@@ -26,10 +26,14 @@ void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 void draw_grid(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
     // Vertical line.
-    Line(surface, x, 1, x, 300, pixel);
+    Line(surface, x, 0, x, 300, pixel);
 
     // Horizontal one.
-    Line(surface, 800, y, 1200, y, pixel);
+    Line(surface, 0, y, 1200, y, pixel);
+
+    pixel = 0xffff0000;
+
+    set_pixel(surface, x, y, pixel);
 
 }
  

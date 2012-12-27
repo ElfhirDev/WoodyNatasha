@@ -138,7 +138,6 @@ int main(int argc, char *argv[])
 		t(i) = svd.matrixV()(i,26);
 	}
 	
-	
 
 	// Set values in Tensor Titi for each Matrix L, M, N.
 	Titi.setVal(t);
@@ -286,7 +285,6 @@ int main(int argc, char *argv[])
 
 									appendMatrixXd(list1, xClick, yClick);
 									appendMatrixXd(list_user1, xClick, yClick);
-									//appendMatrixXd(list3, xClick, yClick);
 
 									cout << "Point add to list1" << endl;
 									

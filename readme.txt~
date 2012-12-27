@@ -1,0 +1,17 @@
+MathIO.hpp : fonctions de créations de matrice à partir d'un fichier.
+
+ttt.cpp : fonctions de manipulation de matrice, appendMatrix;
+draw.cpp : fonction de dessin, d'affichage.
+
+Tensor3d : la classe de notre tensor;
+
+input/ image1,2,3 sont les images chargées. list1.list and co sont les listes de point chargés dans le main. Ne pas les modifier.
+
+input/list-user/  list1.list and co sont des listes avec un point bidon - nécessaire pour que les fonctions de MathIO ne freeze pas l'écran - dans l'optique de sauvegarder les point de l'utilisateur.
+
+save/ des "impressions" de nos matrices et vecteurs, pour vérifications; A la matrice A 28*27, A2 la matrice du transfert 4*2, U et V -svd2 les matrices de la svd du transfert.
+savelist1 et 2, enregistrent les points cliqués pour le transfert;
+
+t est le vecteur représentant les valeurs du tenseur.
+
+X2 notre vecteur solution tant attendu
