@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
   Eigen::MatrixXd list_user2;
   Eigen::MatrixXd list_user3;
 
+  // Useless list_user ... 
   const char* nameList_user1 = "input/list-user/list1.list";
   const char* nameList_user2 = "input/list-user/list2.list";
   const char* nameList_user3 = "input/list-user/list3.list";
@@ -167,7 +168,7 @@ int main(int argc, char *argv[])
 
 		if(count1 > 0 && count2 > 0) {
 			
-			X2 = Titi.transfertTo3(list_user1, list_user2);
+			X2 = Titi.transfertTo1(list2, list3);
 
 
 /*
@@ -189,7 +190,7 @@ int main(int argc, char *argv[])
 			temp2 = X2(1);
 
 			
-			appendMatrixXd(list3, temp1, temp2);
+			appendMatrixXd(list1, temp1, temp2);
 			
 		}
 
@@ -198,7 +199,8 @@ int main(int argc, char *argv[])
 		    	fill_circle(screen, list1(i,0), list1(i,1), 0, red);
 		    }
 		    else
-		    	fill_circle(screen, list1(i,0), list1(i,1), 3, red);
+		    	//fill_circle(screen, list1(i,0), list1(i,1), 3, red);
+		    	draw_grid(screen, list1(i,0), list1(i,1), cream);
 		}
 
 		// draw points on image2
@@ -219,9 +221,9 @@ int main(int argc, char *argv[])
 			}
 			else {
 				
-				//fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
+				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
 				
-				draw_grid(screen, list3(i,0)+image1->w+image2->w, list3(i,1), cream);
+				
 				
 				//set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
 
@@ -283,15 +285,13 @@ int main(int argc, char *argv[])
 								
 								if(xClick <= 399) {
 
-									appendMatrixXd(list1, xClick, yClick);
-									appendMatrixXd(list_user1, xClick, yClick);
+									appendMatrixXd(list1, xClick, yClick);				
 
 									cout << "Point add to list1" << endl;
 									
 									cout << list1 << endl;
 
-									++count1;
-
+									
 								}
 								
 								else if(xClick >= 400 && xClick <= 799) {
@@ -299,17 +299,25 @@ int main(int argc, char *argv[])
 									xClick -= 400; // correctif;
 									
 									appendMatrixXd(list2, xClick, yClick);
-									appendMatrixXd(list_user2, xClick, yClick);
 									
 									cout << "Point add to list2" << endl;
-									
-									cout << list2 << endl;
 
-									++count2;
+									cout << list2 << endl;
+									
+									++count1;
 
 								}
 								else if(xClick >= 800) {
-									cout << "You should click on the 1s and 2nd images," << endl << "else invert images in the folder." << endl;
+
+									xClick -= 800; // correctif;
+									
+									appendMatrixXd(list3, xClick, yClick);
+
+									cout << list3 << endl;
+
+									cout << "Point add to list2" << endl;
+
+									++count2;
 								}
 								  							
 

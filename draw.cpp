@@ -29,7 +29,7 @@ void draw_grid(SDL_Surface *surface, int x, int y, Uint32 pixel)
     Line(surface, x, 0, x, 300, pixel);
 
     // Horizontal one.
-    Line(surface, 0, y, 1200, y, pixel);
+    Line(surface, 0, y, 400, y, pixel);
 
     pixel = 0xffff0000;
 
