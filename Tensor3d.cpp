@@ -298,6 +298,7 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 
 	X2 = svd.solve(b);
 	
+	// Not necessary. Just for checking.
 	kn::saveMatrix(A2, "input/save/A2.list");
 	kn::saveMatrix(X2, "input/save/X2-transfert.list");
 	kn::saveMatrix(b, "input/save/b.list");
@@ -309,6 +310,8 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 
 /*
 
+// Other version of transfertTo1, not bad but differently precise.
+// 
 Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
 	Eigen::VectorXd X2 = MatrixXd::Zero(2,1);

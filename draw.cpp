@@ -31,6 +31,8 @@ void draw_grid(SDL_Surface *surface, int x, int y, Uint32 pixel)
     // Horizontal one.
     Line(surface, 0, y, 400, y, pixel);
 
+
+    // Pixel intersection in red.
     pixel = 0xffff0000;
 
     set_pixel(surface, x, y, pixel);

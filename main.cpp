@@ -129,11 +129,6 @@ int main(int argc, char *argv[])
 	
 	VectorXd t = MatrixXd::Zero(27,1);
 
-	/*
-	VectorXd zero = MatrixXd::Zero(28,1);
-	t = svd.solve(zero);
-	*/
-
 	
 	for(int i = 0; i<27 ; ++i) {
 		t(i) = svd.matrixV()(i,26);
@@ -145,25 +140,9 @@ int main(int argc, char *argv[])
 
 	Titi.printTensor3d();
 
-
-	/*
-	// A*t == 0   at least squares.
-
-	MatrixXd test = A*t;
-
-	for(int i = 0; i<test.rows(); ++i) {
-		for(int j = 0; j<test.cols(); ++j) {
-			cout << " " << test(i,j);
-		}
-		cout << endl;
-	}
-	*/
-
 	VectorXd X2;
 
-
 	
-
 	while (done) {
 
 		if(count1 > 0 && count2 > 0) {
