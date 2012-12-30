@@ -2,6 +2,7 @@
 #define __TTT__
 
 #include "Eigen/Dense"
+#include <iostream>
 
 /** Add a row, initialized at x,y, and  1      doubles
  *  param The list to modify
@@ -16,5 +17,8 @@ void appendMatrixXd(Eigen::MatrixXd &list, int x, int y);
  *
  */
 void appendMatrixXi(Eigen::MatrixXi &list, int x, int y);
+
+void print_help();
+
 
 #endif //__TTT__

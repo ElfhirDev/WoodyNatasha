@@ -1,4 +1,4 @@
-#include <iostream>
+
 #include <typeinfo>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -45,6 +45,25 @@ int main(int argc, char *argv[]) {
   	image2 = IMG_Load(input2.c_str());
   	image3 = IMG_Load(input3.c_str());
   }
+  else if (argc == 2) {
+  	string help(argv[1]);
+
+  	string h = "-h";
+
+  	if (help.compare(h) == 1) {
+
+  		print_help();
+  	}
+
+  	input1.append("image1.jpg");
+  	input2.append("image2.jpg");
+  	input3.append("image3.jpg");
+
+	image1 = IMG_Load(input1.c_str());
+  	image2 = IMG_Load(input2.c_str());
+  	image3 = IMG_Load(input3.c_str());
+  }
+
   else {
 
   	input1.append("image1.jpg");
@@ -169,7 +188,7 @@ int main(int argc, char *argv[]) {
 	// Set values in Tensor Titi for each Matrix L, M, N.
 	Titi.setVal(t);
 
-	Titi.printTensor3d();
+	// Titi.printTensor3d();
 
 	VectorXd X2;
 
@@ -377,7 +396,7 @@ int main(int argc, char *argv[]) {
   IMG_Quit();
   SDL_Quit();  // it frees screen, so don't call "SDL_FreeSurface(screen);"
 
-  return EXIT_SUCCESS;
+  return (EXIT_SUCCESS);
 }
 
 
