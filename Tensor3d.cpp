@@ -256,7 +256,10 @@ Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
 }
 
 
+/*
 
+// Other version of transfertTo1, not bad but differently precise.
+// 
 
 Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	Eigen::MatrixXd A2 = MatrixXd::Zero(4,2);
@@ -308,10 +311,8 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 }
 
 
-/*
+*/
 
-// Other version of transfertTo1, not bad but differently precise.
-// 
 Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
 	Eigen::VectorXd X2 = MatrixXd::Zero(2,1);
@@ -357,7 +358,7 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	return X2;
 }
 
-*/
+
 
 
 

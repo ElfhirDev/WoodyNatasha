@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   	string input2("input/");
   	string input3("input/");
 
-  if(argc >= 3 && argc <=6) {
+  if(argc >= 3 && argc <=7) {
 
   	input1.append(argv[1]);
   	input2.append(argv[2]);
@@ -103,133 +103,188 @@ int main(int argc, char *argv[]) {
   imageOffset.x = image1->w + image2->w;
   SDL_BlitSurface(image3, NULL, screen, &imageOffset);
 
-  // load the point lists
-  Eigen::MatrixXd list1;
-  Eigen::MatrixXd list2;
-  Eigen::MatrixXd list3;
+
+	string input4("input/list-user/");
+	string input5("input/list-user/");
+	string input6("input/list-user/");
+
+	// load the point lists
+	Eigen::MatrixXd list1;
+	Eigen::MatrixXd list2;
+	Eigen::MatrixXd list3;
+
+	if(argc == 7) {
+		input4.append(argv[4]);
+		input5.append(argv[5]);
+		input6.append(argv[6]);
+
+	}
+	else {
+		input4.append("list1.list");
+		input5.append("list2.list");
+		input6.append("list3.list");
+	}
+
+	// load 
   
-  // load 
-  const char* nameList1 = "input/list1.list";
-  const char* nameList2 = "input/list2.list";
-  const char* nameList3 = "input/list3.list";
-  
-  // see MathIO.hpp ; it loads the points from a file in matrix of "list"
-  kn::loadMatrix(list1, nameList1);
-  kn::loadMatrix(list2, nameList2);
-  kn::loadMatrix(list3, nameList3);
+	// see MathIO.hpp ; it loads the points from a file in matrix of "list"
+	
+	kn::loadMatrix(list1, input4);
+	kn::loadMatrix(list2, input5);
+	kn::loadMatrix(list3, input6);
 
-  // MatrixX where the user will add xClick and yClick and 1 at the end. One of them will be filled by transfert.
-  // For the beginning it's list_user3.
-  Eigen::MatrixXd list_user1;
-  Eigen::MatrixXd list_user2;
-  Eigen::MatrixXd list_user3;
+	// some colors ; used in fill_circle, set_pixel ; hexadecimal as webcolor.
+	Uint32 red  = 0xffff0000;
+	Uint32 blue = 0xff0000ff;
+	Uint32 yellow = 0xffffff00;
+	Uint32 cream = 0xffe6e6fa;
 
-  // Useless list_user ... 
-  const char* nameList_user1 = "input/list-user/list1.list";
-  const char* nameList_user2 = "input/list-user/list2.list";
-  const char* nameList_user3 = "input/list-user/list3.list";
 
-  kn::loadMatrix(list_user1, nameList_user1);
-  kn::loadMatrix(list_user2, nameList_user2);
-  kn::loadMatrix(list_user3, nameList_user3); 
-
-  // some colors ; used in fill_circle, set_pixel ; hexadecimal as webcolor.
-  Uint32 red  = 0xffff0000;
-  Uint32 blue = 0xff0000ff;
-  Uint32 yellow = 0xffffff00;
-  Uint32 cream = 0xffe6e6fa;
-
- // Old tentative to put pixel transparent. Not effective, but au cas où.
- // Uint32 alpha = SDL_MapRGBA(image1->format, 255, 255, 255, 255);
-
-  // idem.
-  SDL_SetAlpha(image1, SDL_SRCALPHA, SDL_ALPHA_TRANSPARENT);
+	// idem.
+	SDL_SetAlpha(image1, SDL_SRCALPHA, SDL_ALPHA_TRANSPARENT);
 
 
 
-  // display everything
-  SDL_Flip(screen);
+	// display everything
+	SDL_Flip(screen);
   
   	// done for while render, listWrite for right to clic - type 'l'
     // count1 and count2 for the right to do the transfer : not before clicking on the 2 first images.
   	// temp1 and temp2 for testing something but ...
 	bool done = true;
-	bool listWrite = false;    
+	bool listWrite = false;   
+	bool newList = false; 
 	double xClick;
 	double yClick;
 	int count1 = 0;
 	int count2 = 0;
+	int count3 = 0;
+	int count4 = 0;
+	int count5 = 0;
+	int count6 = 0;
 	int temp1 = 0;
 	int temp2 = 0;
 	SDL_Event event;
 	
-	// ---------- Test zone --------------	
-	// Titi is our object Tensor3d.
-	Tensor3d Titi(list1, list2, list3);
-	
 
-	// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
-	// See Tensor3d.cpp
-	Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
-
-
-	// SVD decomposition of A
-	// See Eigen3 doc
-	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
-	
-	VectorXd t = MatrixXd::Zero(27,1);
-
-	
-	for(int i = 0; i<27 ; ++i) {
-		t(i) = svd.matrixV()(i,26);
-	}
-	
-
-	// Set values in Tensor Titi for each Matrix L, M, N.
-	Titi.setVal(t);
-
-	// Titi.printTensor3d();
-
-	VectorXd X2;
 
 	
 	while (done) {
 
-		if(count1 > 0 && count2 > 0) {
-			
-			X2 = Titi.transfertTo1(list2, list3);
+		if(newList == false) {
 
+			if((count1 > 0 && count2 > 0) || (count2 > 0 && count3 > 0) || (count1 > 0 && count3 > 0)) {
 
-/*
-			cout << "  svd2.matrixV rows : " << svd2.matrixV().rows() << "  svd2.matrixV cols : " << svd2.matrixV().cols() << endl;
-			cout << "  svd2.matrixU rows : " << svd2.matrixU().rows() << "  svd2.matrixU cols : " << svd2.matrixU().cols() << endl;
-*/	
+				// Titi is our object Tensor3d.
+				Tensor3d Titi(list1, list2, list3);
+				
+				// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
+				// See Tensor3d.cpp
+				Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
 
+				// SVD decomposition of A
+				// See Eigen3 doc
+				JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+				
+				VectorXd t = MatrixXd::Zero(27,1);
 
-			/*
-			X2(0) = V(0,1);
-			X2(1) = V(1,1);
-			*/
+				for(int i = 0; i<27 ; ++i) {
+					t(i) = svd.matrixV()(i,26);
+				}
+				
+				// Set values in Tensor Titi for each Matrix L, M, N.
+				Titi.setVal(t);
 
-			
-			count1 = 0;
-			count2 = 0;
+				// Titi.printTensor3d();
 
-			temp1 = X2(0);
-			temp2 = X2(1);
+				VectorXd X2;
 
-			
-			appendMatrixXd(list1, temp1, temp2);
-			
+				if (count2 > 0 && count3 > 0) {
+
+					cout << "Starting Trifocal Tensor computing to image1." << endl;
+					
+					X2 = Titi.transfertTo1(list2, list3);
+
+					count2 = 0;
+					count3 = 0;
+
+					temp1 = X2(0);
+					temp2 = X2(1);
+
+					appendMatrixXd(list1, temp1, temp2);
+
+				}
+
+				else if (count1 > 0 && count2 > 0) {
+
+					cout << "Starting Trifocal Tensor computing to image3." << endl;
+					
+					X2 = Titi.transfertTo3(list1, list2);
+
+					count1 = 0;
+					count2 = 0;
+
+					temp1 = X2(0);
+					temp2 = X2(1);
+
+					appendMatrixXd(list3, temp1, temp2);
+
+				}
+
+				else if (count1 > 0 && count3 > 0) {
+
+					cout << "Starting Trifocal Tensor computing to image2." << endl;
+					
+					X2 = Titi.transfertTo2(list1, list3);
+
+					count1 = 0;
+					count3 = 0;
+
+					temp1 = X2(0);
+					temp2 = X2(1);
+
+					appendMatrixXd(list2, temp1, temp2);
+
+				}
+				else {}
+			}
+			else {
+				// Titi is our object Tensor3d.
+				Tensor3d Titi(list1, list2, list3);
+	
+				// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
+				// See Tensor3d.cpp
+				Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
+
+				// SVD decomposition of A
+				// See Eigen3 doc
+				JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+				
+				VectorXd t = MatrixXd::Zero(27,1);
+
+				for(int i = 0; i<27 ; ++i) {
+					t(i) = svd.matrixV()(i,26);
+				}
+				
+				// Set values in Tensor Titi for each Matrix L, M, N.
+				Titi.setVal(t);
+
+				//Titi.printTensor3d();
+
+				VectorXd X2;
+			}
 		}
+		else {}
 
 		for(int i=0; i<list1.rows(); ++i) {
 		  	if(i<7) {
 		    	fill_circle(screen, list1(i,0), list1(i,1), 0, red);
 		    }
-		    else
+		    else {
 		    	//fill_circle(screen, list1(i,0), list1(i,1), 3, red);
 		    	draw_grid(screen, list1(i,0), list1(i,1), cream);
+		    	set_pixel(screen, list1(i,0), list1(i,1), cream);
+		    }
 		}
 
 		// draw points on image2
@@ -237,8 +292,9 @@ int main(int argc, char *argv[]) {
 			if(i<7) {
 				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 0, blue);
 			}
-			else
+			else {
 				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, blue);
+			}
 		}
 		
 		// draw points on image3
@@ -251,8 +307,6 @@ int main(int argc, char *argv[]) {
 			else {
 				
 				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
-				
-				
 				
 				//set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
 
@@ -277,6 +331,32 @@ int main(int argc, char *argv[]) {
 						case SDLK_DELETE :
 							done = false;
 						break;
+
+						case 'p':
+							if (newList == false) {
+								cout << endl;
+								cout << "    User can add points to each list - at least 7 for each one." << endl;
+								newList = true;
+							}
+							else {
+								cout << endl;
+								cout << "    User stop adding points to lists." << endl;
+								newList = false;
+							}
+
+						break;
+
+						case 'r':
+							if(count4 >= 7 && count5 >= 7 && count6 >= 7) {
+								cout << "   Saving the lists points clicked by user." << endl;
+
+
+							}
+							else {
+								cout << "   You should add 7 points to each list before saving." << endl;
+							}
+
+						break;
 						
 						case 'l':
 							
@@ -293,11 +373,11 @@ int main(int argc, char *argv[]) {
 							
 						break;
 
-						case 'o':
-							cout << "Je suis une variable" << endl;
-							
-							
 
+
+						case 'o':
+							cout << "Je suis une variable ..." << endl;
+							
 						break;
 						
 						default:
@@ -320,6 +400,13 @@ int main(int argc, char *argv[]) {
 									
 									cout << list1 << endl;
 
+									if(newList) {
+										++count4;
+									}
+									else {
+										++count1;
+									}
+
 									
 								}
 								
@@ -332,8 +419,14 @@ int main(int argc, char *argv[]) {
 									cout << "Point add to list2" << endl;
 
 									cout << list2 << endl;
+
+									if(newList) {
+										++count5;
+									}
+									else {
+										++count2;
+									}
 									
-									++count1;
 
 								}
 								else if(xClick >= 800) {
@@ -346,7 +439,13 @@ int main(int argc, char *argv[]) {
 
 									cout << "Point add to list2" << endl;
 
-									++count2;
+									if(newList) {
+										++count6;
+									}
+									else {
+										++count3;
+									}
+
 								}
 								  							
 
@@ -376,27 +475,18 @@ int main(int argc, char *argv[]) {
 		}	// end switch(event)	
 	} // end while(done)  
   
-  // save a list
-
-  kn::saveMatrix(list_user1,"input/save/savelist1.list");
-  kn::saveMatrix(list_user2,"input/save/savelist2.list");
-  kn::saveMatrix(list_user3,"input/save/savelist3.list");
-
-  kn::saveMatrix(A, "input/save/A.list");
-  kn::saveMatrix(t, "input/save/t.list");
-  
-  kn::saveMatrix(X2, "input/save/X2.list");
+	
 
   
 
-  // quit sdl
-  SDL_FreeSurface(image1); 
-  SDL_FreeSurface(image2); 
-  SDL_FreeSurface(image3); 
-  IMG_Quit();
-  SDL_Quit();  // it frees screen, so don't call "SDL_FreeSurface(screen);"
+	// quit sdl
+	SDL_FreeSurface(image1); 
+	SDL_FreeSurface(image2); 
+	SDL_FreeSurface(image3); 
+	IMG_Quit();
+	SDL_Quit();  // it frees screen, so don't call "SDL_FreeSurface(screen);"
 
-  return (EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }
 
 
