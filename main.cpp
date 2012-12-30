@@ -2,6 +2,7 @@
 #include <typeinfo>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <cstring>
 
 #include "Eigen/SVD"
 
@@ -13,18 +14,48 @@
 using namespace std;
 
 
-int main(int argc, char *argv[])
-{
-  // init SDL image
-  if(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == -1){
-    std::cerr << "error IMG_Init" << std::endl;
-    return (EXIT_FAILURE);
+int main(int argc, char *argv[]) {
+
+	// init SDL image
+	if(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == -1){
+		std::cerr << "error IMG_Init" << std::endl;
+		return (EXIT_FAILURE);
+	}
+
+	// load some images
+	SDL_Surface *image1;
+	SDL_Surface *image2;
+	SDL_Surface *image3;
+	
+	string input1("input/");
+  	string input2("input/");
+  	string input3("input/");
+
+  if(argc >= 3 && argc <=6) {
+
+  	input1.append(argv[1]);
+  	input2.append(argv[2]);
+  	input3.append(argv[3]);
+
+
+  	cout << input1 << endl;
+
+
+	image1 = IMG_Load(input1.c_str());
+  	image2 = IMG_Load(input2.c_str());
+  	image3 = IMG_Load(input3.c_str());
+  }
+  else {
+
+  	input1.append("image1.jpg");
+  	input2.append("image2.jpg");
+  	input3.append("image3.jpg");
+
+	image1 = IMG_Load(input1.c_str());
+  	image2 = IMG_Load(input2.c_str());
+  	image3 = IMG_Load(input3.c_str());
   }
 
-  // load some images
-  SDL_Surface *image1 = IMG_Load("input/image1.jpg");
-  SDL_Surface *image2 = IMG_Load("input/image2.jpg");
-  SDL_Surface *image3 = IMG_Load("input/image3.jpg");
   if(image1 == 0 || image2 == 0 || image3 == 0){
     std::cerr << "error loading images" << std::endl;
     cerr << "    Be sure your image are in input folder," << endl;
