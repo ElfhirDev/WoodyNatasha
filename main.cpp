@@ -154,6 +154,7 @@ int main(int argc, char *argv[]) {
 	bool done = true;
 	bool listWrite = false;   
 	bool newList = false; 
+	bool saveList = false;
 	double xClick;
 	double yClick;
 	int count1 = 0;
@@ -167,37 +168,142 @@ int main(int argc, char *argv[]) {
 	SDL_Event event;
 	
 
+	// Titi is our object Tensor3d.
+	Tensor3d Titi(list1, list2, list3);
+
+	// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
+	// See Tensor3d.cpp
+	Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
+
+	// SVD decomposition of A
+	// See Eigen3 doc
+	JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+				
+	VectorXd t = MatrixXd::Zero(27,1);
+
+	for(int i = 0; i<27 ; ++i) {
+		t(i) = svd.matrixV()(i,26);
+	}
+				
+	// Set values in Tensor Titi for each Matrix L, M, N.
+	Titi.setVal(t);
+
+	VectorXd X2;
+
 
 	
 	while (done) {
 
-		if(newList == false) {
+		if(saveList) {
 
 			if((count1 > 0 && count2 > 0) || (count2 > 0 && count3 > 0) || (count1 > 0 && count3 > 0)) {
 
-				// Titi is our object Tensor3d.
-				Tensor3d Titi(list1, list2, list3);
-				
-				// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
-				// See Tensor3d.cpp
-				Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
 
-				// SVD decomposition of A
-				// See Eigen3 doc
-				JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
-				
-				VectorXd t = MatrixXd::Zero(27,1);
 
-				for(int i = 0; i<27 ; ++i) {
-					t(i) = svd.matrixV()(i,26);
+				if (count2 > 0 && count3 > 0) {
+
+
+					JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+					
+					t = MatrixXd::Zero(27,1);
+
+					for(int i = 0; i<27 ; ++i) {
+						t(i) = svd.matrixV()(i,26);
+					}
+
+					Titi.setVal(t);
+
+					// Titi.printTensor3d();
+
+					cout << "Starting Trifocal Tensor computing to image1." << endl;
+					
+					X2 = Titi.transfertTo1(list2, list3);
+
+					count2 = 0;
+					count3 = 0;
+
+					temp1 = X2(0);
+					temp2 = X2(1);
+
+					appendMatrixXd(list1, temp1, temp2);
+
+					Titi.buildMatrixA(list1, list2, list3);
+
+
 				}
-				
-				// Set values in Tensor Titi for each Matrix L, M, N.
-				Titi.setVal(t);
 
-				// Titi.printTensor3d();
+				else if (count1 > 0 && count2 > 0) {
 
-				VectorXd X2;
+
+					JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+					
+					t = MatrixXd::Zero(27,1);
+
+					for(int i = 0; i<27 ; ++i) {
+						t(i) = svd.matrixV()(i,26);
+					}
+					
+					Titi.setVal(t);
+
+					// Titi.printTensor3d();
+
+					cout << "Starting Trifocal Tensor computing to image3." << endl;
+					
+					X2 = Titi.transfertTo3(list1, list2);
+
+					count1 = 0;
+					count2 = 0;
+
+					temp1 = X2(0);
+					temp2 = X2(1);
+
+					appendMatrixXd(list3, temp1, temp2);
+					Titi.buildMatrixA(list1, list2, list3);
+
+				}
+
+				else if (count1 > 0 && count3 > 0) {
+					
+					A = Titi.buildMatrixA(list1, list2, list3);
+
+					JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+					
+					t = MatrixXd::Zero(27,1);
+
+					for(int i = 0; i<27 ; ++i) {
+						t(i) = svd.matrixV()(i,26);
+					}
+					
+					Titi.setVal(t);
+
+					// Titi.printTensor3d();
+
+					cout << "Starting Trifocal Tensor computing to image2." << endl;
+					
+					X2 = Titi.transfertTo2(list1, list3);
+
+					count1 = 0;
+					count3 = 0;
+
+					temp1 = X2(0);
+					temp2 = X2(1);
+
+					appendMatrixXd(list2, temp1, temp2);
+					Titi.buildMatrixA(list1, list2, list3);
+
+				}
+				else {}
+			}
+
+			else {
+				// Nothing to do either.
+			}
+		}
+		else {
+
+			// if not saveList
+
+			if((count1 > 0 && count2 > 0) || (count2 > 0 && count3 > 0) || (count1 > 0 && count3 > 0)) {
 
 				if (count2 > 0 && count3 > 0) {
 
@@ -248,52 +354,29 @@ int main(int argc, char *argv[]) {
 				}
 				else {}
 			}
-			else {
-				// Titi is our object Tensor3d.
-				Tensor3d Titi(list1, list2, list3);
-	
-				// Matrix A ctor : 28rows, 27 col. Diagonaly filled ; out of it, initialized with 0
-				// See Tensor3d.cpp
-				Eigen::MatrixXd A = Titi.buildMatrixA(list1, list2, list3);
 
-				// SVD decomposition of A
-				// See Eigen3 doc
-				JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
-				
-				VectorXd t = MatrixXd::Zero(27,1);
-
-				for(int i = 0; i<27 ; ++i) {
-					t(i) = svd.matrixV()(i,26);
-				}
-				
-				// Set values in Tensor Titi for each Matrix L, M, N.
-				Titi.setVal(t);
-
-				//Titi.printTensor3d();
-
-				VectorXd X2;
-			}
 		}
-		else {}
 
+		// draw points on image1
 		for(int i=0; i<list1.rows(); ++i) {
 		  	if(i<7) {
-		    	fill_circle(screen, list1(i,0), list1(i,1), 0, red);
+		    	fill_circle(screen, list1(i,0), list1(i,1), 2, red);
 		    }
 		    else {
-		    	//fill_circle(screen, list1(i,0), list1(i,1), 3, red);
-		    	draw_grid(screen, list1(i,0), list1(i,1), cream);
-		    	set_pixel(screen, list1(i,0), list1(i,1), cream);
+		    	fill_circle(screen, list1(i,0), list1(i,1), 3, cream);
+
+		    	//draw_grid(screen, list1(i,0), list1(i,1), cream);
+		    	//set_pixel(screen, list1(i,0), list1(i,1), cream);
 		    }
 		}
 
 		// draw points on image2
 		for(int i=0; i<list2.rows(); ++i) {
 			if(i<7) {
-				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 0, blue);
+				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 2, blue);
 			}
 			else {
-				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, blue);
+				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, cream);
 			}
 		}
 		
@@ -302,11 +385,11 @@ int main(int argc, char *argv[]) {
 		for(int i=0; i<list3.rows(); ++i) {
 
 		    if(i<7) {
-		    	fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 0, yellow);
+		    	fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 2, yellow);
 			}
 			else {
 				
-				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
+				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, cream);
 				
 				//set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
 
@@ -346,10 +429,16 @@ int main(int argc, char *argv[]) {
 
 						break;
 
+						case 'f':
+							cout << "WARNING : user can update the tensor by adding new points;" << endl;
+							cout << "It may be not very stable." << endl;
+							saveList = true;
+						break;
+
 						case 'r':
 							if(count4 >= 7 && count5 >= 7 && count6 >= 7) {
 								cout << "   Saving the lists points clicked by user." << endl;
-
+								saveList = true;
 
 							}
 							else {
@@ -475,8 +564,11 @@ int main(int argc, char *argv[]) {
 		}	// end switch(event)	
 	} // end while(done)  
   
-	
+	kn::saveMatrix(list1, "input/save/checklist1.list");
+	kn::saveMatrix(list2, "input/save/checklist2.list");
+	kn::saveMatrix(list3, "input/save/checklist3.list");
 
+	kn::saveMatrix(A, "input/save/checkA.list");
   
 
 	// quit sdl

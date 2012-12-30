@@ -131,7 +131,122 @@ void Tensor3d::printTensor3d() {
 
 }
 
-// This is sparta !!
+// New version of buildMatrixA, which can take more than 7 points !
+//
+Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
+	int points = L1.rows();
+	int limit = 4*points;
+	Eigen::MatrixXd A = MatrixXd::Zero(limit, 27);
+	
+	// For each points
+	for(int p = 0; p < points; ++p) {
+
+		// For each coords of a points - seems like playing with x,y,z
+		for(int k = 0; k<3 ; ++k) {
+
+			// 4 equations - seems like playing with x and y values combination - xx, xy, yx, yy -
+			for(int i = 0; i<2; ++i) {
+				for(int l = 0; l<2; ++l) {
+
+					if(k == 0) {
+						if(i==0 && l==0) {
+							A(4*p + 2*i + l, 6) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 0) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 8) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 2) = L1(p,k) * (  L2(p,2)*L3(p,l) );
+						}
+						else if(i==0 && l==1) {
+							A(4*p + 2*i + l, 7) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 1) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 8) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 2) = L1(p,k) * (  L2(p,2)*L3(p,l) );
+						}
+						else if(i==1 && l==0) {
+							A(4*p + 2*i + l, 6) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 3) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 8) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 5) = L1(p,k) * (  L2(p,2)*L3(p,l) );	
+						}
+						else if(i==1 && l==1) {
+							A(4*p + 2*i + l, 7) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 4) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 8) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 5) = L1(p,k) * (  L2(p,2)*L3(p,l) );	
+						}
+						else {}
+					}
+
+					else if(k==1) {
+						if(i==0 && l==0) {
+							A(4*p + 2*i + l, 15) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l,  9) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 17) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 11) = L1(p,k) * (  L2(p,2)*L3(p,l) );
+						}
+						else if(i==0 && l==1) {
+							A(4*p + 2*i + l, 16) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 10) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 17) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 11) = L1(p,k) * (  L2(p,2)*L3(p,l) );
+						}
+						else if(i==1 && l==0) {
+							A(4*p + 2*i + l, 15) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 12) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 17) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 14) = L1(p,k) * (  L2(p,2)*L3(p,l) );	
+						}
+						else if(i==1 && l==1) {
+							A(4*p + 2*i + l, 16) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 13) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 17) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 14) = L1(p,k) * (  L2(p,2)*L3(p,l) );	
+						}
+						else {}
+
+					}		
+
+					else if(k==2) {
+						if(i==0 && l==0) {
+							A(4*p + 2*i + l, 24) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 18) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 26) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 20) = L1(p,k) * (  L2(p,2)*L3(p,l) );
+						}
+						else if(i==0 && l==1) {
+							A(4*p + 2*i + l, 25) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 19) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 26) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 20) = L1(p,k) * (  L2(p,2)*L3(p,l) );
+						}
+						else if(i==1 && l==0) {
+							A(4*p + 2*i + l, 24) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 21) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 26) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 23) = L1(p,k) * (  L2(p,2)*L3(p,l) );	
+						}
+						else if(i==1 && l==1) {
+							A(4*p + 2*i + l, 25) = L1(p,k) * (  L2(p,i)*L3(p,2) );
+							A(4*p + 2*i + l, 22) = L1(p,k) * ( -L2(p,2)*L3(p,2) );
+							A(4*p + 2*i + l, 26) = L1(p,k) * ( -L2(p,i)*L3(p,l) );
+							A(4*p + 2*i + l, 23) = L1(p,k) * (  L2(p,2)*L3(p,l) );	
+						}
+						else {}
+					}
+					else {}		
+
+
+				} // end for l
+			} // end for i
+ 
+		} // end for k
+
+	} // end for p
+
+	return A;
+}
+
+/*
+
 Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 	Eigen::MatrixXd A = MatrixXd::Zero(28,27);
 	
@@ -243,6 +358,9 @@ Eigen::MatrixXd Tensor3d::buildMatrixA(MatrixXd L1, MatrixXd L2, MatrixXd L3) {
 	return A;
 }
 
+
+*/
+
 // not used.
 Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
 	Eigen::MatrixXi newA(28,27);
@@ -256,7 +374,7 @@ Eigen::MatrixXi Tensor3d::aroundMatrixA(Eigen::MatrixXd &A) {
 }
 
 
-/*
+
 
 // Other version of transfertTo1, not bad but differently precise.
 // 
@@ -311,8 +429,8 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 }
 
 
-*/
 
+/*
 Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
 	Eigen::VectorXd X2 = MatrixXd::Zero(2,1);
@@ -359,7 +477,7 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 }
 
 
-
+*/
 
 
 

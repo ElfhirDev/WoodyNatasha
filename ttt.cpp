@@ -47,9 +47,15 @@ void print_help() {
 	std::cout << "   WARNING : These lists should be in the 'input/list_user/' directory of this program;" << std::endl;
 	std::cout << std::endl << std::endl;
 	std::cout << "   When the program runs:  " << std::endl;
+	std::cout << "   These are the sequences of events you have to do" << std::endl;
+	std::cout << "   l,clicks to transfer || l,p, 7clicks on each images,p,r, clicks to transfer || l,f, clicks to transfer." << std::endl;
+
 	std::cout << "   Press 'q' or 'suppr' or 'Echap' for closing it." << std::endl;
 	std::cout << ">>>Press 'l' for clicking on images." << std::endl;
 	std::cout << "   WARNING : you should click on one image then on the other." << std::endl;
+	std::cout << "   Press 'p' for allowed user to click all his points he wants" << std::endl << "in the lists. It needs at minima 7 for each images." << std::endl;
+	std::cout << "   Press 'r' for saving these new points list - You should then press 'p' for finishing." << std::endl;
+	std::cout << "   Press 'f' for update the tensor with the new points found, each time you click, the tensor is update." << std::endl;
 	std::cout << "   Press 'o' for showing a joke." << std::endl;
 	std::cout << std::endl << std::endl;
 
