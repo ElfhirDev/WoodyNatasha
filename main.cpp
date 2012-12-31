@@ -365,7 +365,7 @@ int main(int argc, char *argv[]) {
 		    else {
 		    	fill_circle(screen, list1(i,0), list1(i,1), 3, cream);
 
-		    	//draw_grid(screen, list1(i,0), list1(i,1), cream);
+		    	draw_grid(screen, list1(i,0), list1(i,1), blue);
 		    	//set_pixel(screen, list1(i,0), list1(i,1), cream);
 		    }
 		}
