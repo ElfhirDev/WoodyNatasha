@@ -434,7 +434,7 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 				
 				A2(2*i + l, l) += ( LI(end,k) * ( LI(end,2)*getVal(i,2,k) - LI(end,i)*getVal(2,2,k ) ) );
 				b(2*i + l) -=  LI(end, k) * ( LJ(end, i) * getVal(2, l, k) - LJ(end, 2) * getVal(i, l, k) );
-				
+
 			}
 				
 		}
@@ -456,9 +456,37 @@ Eigen::MatrixXd Tensor3d::transfertTo1(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
 
 
  Eigen::MatrixXd Tensor3d::transfertTo2(Eigen::MatrixXd LI, Eigen::MatrixXd LJ) {
- 	Eigen::MatrixXd A = MatrixXd::Zero(4,2);
+	Eigen::MatrixXd A2 =  MatrixXd::Zero(4,2);
+	Eigen::VectorXd X2 = MatrixXd::Zero(2,1);
+	Eigen::VectorXd b = MatrixXd::Zero(4,1);
 
- 	return A;
+	int end = LI.rows() - 1 ;
+
+	for(int k = 0; k<3; ++k) {
+
+		for(int i = 0; i<2; ++i) {
+			for(int l = 0; l<2; ++l) {
+				
+				A2(2*i + l, i) += ( LI(end,k) * ( LJ(end,2)*getVal(2, l, k) - LJ(end,i)*getVal(2, 2, k) ) );
+				b(2*i + l) -=  LI(end, k) * ( LJ(end, l) * getVal(i, 2, k) - LJ(end, 2) * getVal(i, l, k) );
+				
+			}
+				
+		}
+
+	}
+
+	// SVD decomposition of A2
+	JacobiSVD<MatrixXd> svd(A2, ComputeThinU | ComputeThinV);
+
+	X2 = svd.solve(b);
+	
+	kn::saveMatrix(A2, "input/save/A.list");
+	kn::saveMatrix(X2, "input/save/X2-transfert.list");
+	kn::saveMatrix(b, "input/save/b.list");
+
+
+	return X2;
  }
  
  
