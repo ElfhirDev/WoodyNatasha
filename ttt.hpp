@@ -18,6 +18,11 @@ void appendMatrixXd(Eigen::MatrixXd &list, int x, int y);
  */
 void appendMatrixXi(Eigen::MatrixXi &list, int x, int y);
 
+
+/** Show help when executing with h option :
+ *	" ./trifocal h    "
+ *
+ */
 void print_help();
 
 

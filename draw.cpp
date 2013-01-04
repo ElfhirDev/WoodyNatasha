@@ -20,16 +20,47 @@ void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 }
 
 /* Draw a 2 lines which cross at the pixel point
- * Implemented by Jérémy TA
- * -- > just for a pixel point on image 3 ; it should be improved.
+ *
  */
-void draw_grid(SDL_Surface *surface, int x, int y, Uint32 pixel)
+void draw_grid1(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
     // Vertical line.
-    Line(surface, x, 0, x, 300, pixel);
+    draw_line(surface, x, 0, x, 300, pixel);
 
     // Horizontal one.
-    Line(surface, 0, y, 400, y, pixel);
+    draw_line(surface, 0, y, 400, y, pixel);
+
+
+    // Pixel intersection in red.
+    pixel = 0xffff0000;
+
+    set_pixel(surface, x, y, pixel);
+
+}
+
+void draw_grid2(SDL_Surface *surface, int x, int y, Uint32 pixel)
+{
+    // Vertical line.
+    draw_line(surface, x+400, 0, x+400, 300, pixel);
+
+    // Horizontal one.
+    draw_line(surface, 401, y, 800, y, pixel);
+
+
+    // Pixel intersection in other color.
+    pixel = 0xffce0000;
+
+    set_pixel(surface, x, y, pixel);
+
+}
+
+void draw_grid3(SDL_Surface *surface, int x, int y, Uint32 pixel)
+{
+    // Vertical line.
+    draw_line(surface, x+800, 0, x+800, 300, pixel);
+
+    // Horizontal one.
+    draw_line(surface, 801, y, 1199, y, pixel);
 
 
     // Pixel intersection in red.
@@ -144,7 +175,7 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
 // For drawing line. 
 // A SDL_Surface where drawing, Point A coords, Point B coords, then color.
 //
-void Line(SDL_Surface *surface, int x1, int y1, int x2, int y2, Uint32 color )
+void draw_line(SDL_Surface *surface, int x1, int y1, int x2, int y2, Uint32 color )
 {
     
     const bool steep = (abs(y2 - y1) > abs(x2 - x1));

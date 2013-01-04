@@ -1,3 +1,6 @@
+/******************************************************************************************************************/
+/*********** Maths Project - Trifocal Tensor - Damaris Ankou & Jérémy Ta - IMAC - December 2012  ******************/
+/******************************************************************************************************************/
 
 #include <typeinfo>
 #include <SDL/SDL.h>
@@ -193,7 +196,7 @@ int main(int argc, char *argv[]) {
 
 	
 	while (done) {
-
+		// case 'f' or 'p' then 'r'.
 		if(saveList) {
 
 			if((count1 > 0 && count2 > 0) || (count2 > 0 && count3 > 0) || (count1 > 0 && count3 > 0)) {
@@ -301,7 +304,7 @@ int main(int argc, char *argv[]) {
 		}
 		else {
 
-			// if not saveList
+			// if not saveList ; just 'l'
 
 			if((count1 > 0 && count2 > 0) || (count2 > 0 && count3 > 0) || (count1 > 0 && count3 > 0)) {
 
@@ -363,10 +366,8 @@ int main(int argc, char *argv[]) {
 		    	fill_circle(screen, list1(i,0), list1(i,1), 2, red);
 		    }
 		    else {
-		    	fill_circle(screen, list1(i,0), list1(i,1), 3, cream);
-
-		    	draw_grid(screen, list1(i,0), list1(i,1), blue);
-		    	//set_pixel(screen, list1(i,0), list1(i,1), cream);
+		    	fill_circle(screen, list1(i,0), list1(i,1), 3, red);
+		    	draw_grid1(screen, list1(i,0), list1(i,1), cream);
 		    }
 		}
 
@@ -376,7 +377,8 @@ int main(int argc, char *argv[]) {
 				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 2, blue);
 			}
 			else {
-				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, cream);
+				fill_circle(screen, list2(i,0)+image1->w, list2(i,1), 3, blue);
+				draw_grid2(screen, list2(i,0), list2(i,1), cream);
 			}
 		}
 		
@@ -389,15 +391,11 @@ int main(int argc, char *argv[]) {
 			}
 			else {
 				
-				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, cream);
-				
-				//set_pixel(screen, list3(i,0)+image1->w+image2->w, list3(i,1), red);
-
+				fill_circle(screen, list3(i,0)+image1->w+image2->w, list3(i,1), 3, yellow);
+				draw_grid3(screen, list3(i,0), list3(i,1), cream);
 			}
 		}
 		 
-		
-		
 		
 		// display everything
   		SDL_Flip(screen);
@@ -426,7 +424,6 @@ int main(int argc, char *argv[]) {
 								cout << "    User stop adding points to lists." << endl;
 								newList = false;
 							}
-
 						break;
 
 						case 'f':
@@ -444,12 +441,9 @@ int main(int argc, char *argv[]) {
 							else {
 								cout << "   You should add 7 points to each list before saving." << endl;
 							}
-
 						break;
 						
 						case 'l':
-							
-  							
 							if(listWrite == false){
 								listWrite = true;								
 								cout << "Beginning writting mode" << endl;
@@ -459,15 +453,7 @@ int main(int argc, char *argv[]) {
 								cout << "Ending writting mode" << endl;
 								
 							}
-							
-						break;
-
-
-
-						case 'o':
-							cout << "Je suis une variable ..." << endl;
-							
-						break;
+							break;
 						
 						default:
 						break;
@@ -536,14 +522,10 @@ int main(int argc, char *argv[]) {
 									}
 
 								}
-								  							
-
 							break;
 								
-							case SDL_BUTTON_RIGHT:
-															
+							case SDL_BUTTON_RIGHT:							
 								cout << "xClick: " << xClick << "  yClick: " << yClick << endl;
-								
 							break;		
 							
 							default:

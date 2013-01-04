@@ -1,10 +1,3 @@
-/** Trifocal Tensor tools
- * Functions here are dedicated for this project.
- * They aren't really re-usable, their name and signature are dedicated
- * to this project.
- *
- */
-
 #include "ttt.hpp"
 
 void appendMatrixXd(Eigen::MatrixXd &list, int x, int y) {
@@ -56,7 +49,6 @@ void print_help() {
 	std::cout << "   Press 'p' for allowed user to click all his points he wants" << std::endl << "in the lists. It needs at minima 7 for each images." << std::endl;
 	std::cout << "   Press 'r' for saving these new points list - You should then press 'p' for finishing." << std::endl;
 	std::cout << "   Press 'f' for update the tensor with the new points found, each time you click, the tensor is update." << std::endl;
-	std::cout << "   Press 'o' for showing a joke." << std::endl;
 	std::cout << std::endl << std::endl;
 
 }
