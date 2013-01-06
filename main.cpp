@@ -551,6 +551,8 @@ int main(int argc, char *argv[]) {
 	kn::saveMatrix(list3, "input/save/checklist3.list");
 
 	kn::saveMatrix(A, "input/save/checkA.list");
+
+	kn::saveMatrix(t, "input/save/t.list");
   
 
 	// quit sdl
